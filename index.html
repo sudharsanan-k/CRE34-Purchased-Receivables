@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRE34 IRB Terminal | RWA for Purchased Receivables</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* =====================================================================
+       SEMANTIC DESIGN TOKENS: DARK OBSIDIAN & LIGHT CRISP INSTITUTIONAL
+       ===================================================================== */
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg-primary: #070b14;
+      --bg-mesh-1: rgba(6, 182, 212, 0.11);
+      --bg-mesh-2: rgba(99, 102, 241, 0.11);
+      --bg-mesh-3: rgba(16, 185, 129, 0.06);
+      --bg-surface: rgba(15, 23, 42, 0.90);
+      --bg-elevated: rgba(11, 18, 34, 0.95);
+      --bg-subcard: rgba(7, 11, 20, 0.72);
+      --bg-ribbon: rgba(9, 14, 26, 0.92);
+      --bg-table-head: rgba(15, 23, 42, 0.96);
+      --bg-row-hover: rgba(30, 41, 59, 0.45);
+      --glass-bg: rgba(7, 11, 20, 0.86);
+      --dock-bg: rgba(15, 23, 42, 0.85);
+      --dock-fade: rgba(7, 11, 20, 0.96);
+      --input-bg: rgba(7, 11, 20, 0.92);
+      --border-subtle: rgba(51, 65, 85, 0.82);
+      --border-strong: rgba(71, 85, 105, 0.95);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-primary: #0ea5e9;
+      --accent-cyan: #22d3ee;
+      --accent-indigo: #818cf8;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #fb7185;
+      --shadow-card: 0 12px 28px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      --shadow-header: 0 12px 32px -10px rgba(0, 0, 0, 0.82);
+      --terminal-bg: linear-gradient(155deg, #050811 0%, #0d172e 100%);
+      --terminal-border: rgba(34, 211, 238, 0.34);
+      --canvas-grid: rgba(71, 85, 105, 0.45);
+      --canvas-text: #94a3b8;
+      --canvas-title: #f8fafc;
+      --canvas-crosshair: rgba(226, 232, 240, 0.45);
+      --tooltip-bg: rgba(7, 11, 20, 0.96);
+      --scroll-track: #0b1120;
+      --scroll-thumb: #334155;
+      --footer-bg: #050811;
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg-primary: #f1f5f9;
+      --bg-mesh-1: rgba(14, 165, 233, 0.10);
+      --bg-mesh-2: rgba(79, 70, 229, 0.08);
+      --bg-mesh-3: rgba(16, 185, 129, 0.07);
+      --bg-surface: rgba(255, 255, 255, 0.96);
+      --bg-elevated: #f8fafc;
+      --bg-subcard: #f1f5f9;
+      --bg-ribbon: rgba(255, 255, 255, 0.92);
+      --bg-table-head: #e2e8f0;
+      --bg-row-hover: rgba(226, 232, 240, 0.55);
+      --glass-bg: rgba(255, 255, 255, 0.88);
+      --dock-bg: rgba(241, 245, 249, 0.95);
+      --dock-fade: rgba(255, 255, 255, 0.96);
+      --input-bg: #ffffff;
+      --border-subtle: #cbd5e1;
+      --border-strong: #94a3b8;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-primary: #0284c7;
+      --accent-cyan: #0369a1;
+      --accent-indigo: #4338ca;
+      --accent-emerald: #047857;
+      --accent-amber: #b45309;
+      --accent-rose: #be123c;
+      --shadow-card: 0 8px 24px -8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-header: 0 8px 24px -10px rgba(15, 23, 42, 0.12);
+      --terminal-bg: linear-gradient(155deg, #f8fafc 0%, #eef2ff 100%);
+      --terminal-border: rgba(2, 132, 199, 0.38);
+      --canvas-grid: rgba(148, 163, 184, 0.42);
+      --canvas-text: #475569;
+      --canvas-title: #0f172a;
+      --canvas-crosshair: rgba(15, 23, 42, 0.35);
+      --tooltip-bg: rgba(255, 255, 255, 0.98);
+      --scroll-track: #e2e8f0;
+      --scroll-thumb: #94a3b8;
+      --footer-bg: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-primary);
+      background-image:
+        radial-gradient(at 8% 0%, var(--bg-mesh-1) 0px, transparent 44%),
+        radial-gradient(at 92% 4%, var(--bg-mesh-2) 0px, transparent 44%),
+        radial-gradient(at 50% 100%, var(--bg-mesh-3) 0px, transparent 50%);
+      color: var(--text-primary);
+      margin: 0;
+      transition: background-color 0.25s ease, color 0.2s ease;
+    }
+
+    .mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Semantic Theme Classes */
+    .t-primary { color: var(--text-primary); }
+    .t-secondary { color: var(--text-secondary); }
+    .t-muted { color: var(--text-muted); }
+    .t-cyan { color: var(--accent-cyan); }
+    .t-indigo { color: var(--accent-indigo); }
+    .t-emerald { color: var(--accent-emerald); }
+    .t-amber { color: var(--accent-amber); }
+    .t-rose { color: var(--accent-rose); }
+    .t-border { border-color: var(--border-subtle); }
+
+    .quant-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      transition: background-color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .quant-subcard {
+      background: var(--bg-subcard);
+      border: 1px solid var(--border-subtle);
+      transition: background-color 0.22s ease, border-color 0.22s ease;
+    }
+    .terminal-panel {
+      background: var(--terminal-bg);
+      border: 1px solid var(--terminal-border);
+      box-shadow: var(--shadow-card);
+      transition: background 0.22s ease, border-color 0.22s ease;
+    }
+    .quant-input {
+      background: var(--input-bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+    }
+    .quant-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+    }
+
+    /* Soft Tinted Adaptive Badges */
+    .badge-cyan {
+      background: rgba(14, 165, 233, 0.13);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(14, 165, 233, 0.32);
+    }
+    .badge-indigo {
+      background: rgba(99, 102, 241, 0.13);
+      color: var(--accent-indigo);
+      border: 1px solid rgba(99, 102, 241, 0.32);
+    }
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.13);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.32);
+    }
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.14);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.36);
+    }
+    .badge-rose {
+      background: rgba(244, 63, 94, 0.13);
+      color: var(--accent-rose);
+      border: 1px solid rgba(244, 63, 94, 0.34);
+    }
+
+    /* Ultra-Slim 64px Sticky Glassmorphic Header */
+    .hyper-header {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 64px;
+      box-shadow: var(--shadow-header);
+      transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .hyper-header::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1.5px;
+      background: linear-gradient(
+        90deg,
+        rgba(6, 182, 212, 0.15) 0%,
+        rgba(6, 182, 212, 0.9) 25%,
+        rgba(79, 70, 229, 0.95) 50%,
+        rgba(16, 185, 129, 0.85) 75%,
+        rgba(6, 182, 212, 0.15) 100%
+      );
+    }
+
+    /* Glowing C34 Monogram Badge */
+    .c34-emblem {
+      background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 55%, #10b981 100%);
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    }
+
+    /* Navigation Dock & Scroll Fade Masks */
+    .nav-scroll-shell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      flex: 1 1 auto;
+      justify-content: flex-end;
+    }
+    .nav-dock {
+      background: var(--dock-bg);
+      border: 1px solid var(--border-subtle);
+      scroll-behavior: smooth;
+      transition: background-color 0.22s ease, border-color 0.22s ease;
+    }
+    .nav-fade-left,
+    .nav-fade-right {
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: opacity 0.18s ease;
+      color: var(--accent-cyan);
+    }
+    .nav-fade-left {
+      left: 0;
+      border-top-left-radius: 0.75rem;
+      border-bottom-left-radius: 0.75rem;
+      background: linear-gradient(90deg, var(--dock-fade) 40%, transparent 100%);
+    }
+    .nav-fade-right {
+      right: 0;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      background: linear-gradient(270deg, var(--dock-fade) 40%, transparent 100%);
+    }
+
+    .nav-pill {
+      position: relative;
+      color: var(--text-muted);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-pill:hover {
+      color: var(--text-primary);
+      background: rgba(148, 163, 184, 0.12);
+    }
+    .nav-pill.active {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.20) 0%, rgba(79, 70, 229, 0.22) 65%, rgba(16, 185, 129, 0.18) 100%);
+      border: 1px solid rgba(14, 165, 233, 0.5);
+      box-shadow: 0 2px 10px rgba(14, 165, 233, 0.16);
+    }
+    .nav-dot {
+      opacity: 0;
+      transform: scale(0.4);
+      transition: all 0.2s ease;
+    }
+    .nav-pill.active .nav-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Tactile Sun / Moon Theme Switch Button */
+    .theme-toggle-btn {
+      background: var(--dock-bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 14px rgba(14, 165, 233, 0.28);
+      transform: translateY(-1px);
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.95);
+    }
+    .theme-icon-spin {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .theme-toggle-btn:hover .theme-icon-spin {
+      transform: rotate(18deg);
+    }
+
+    @media (max-width: 560px) {
+      .nav-pill {
+        padding: 0.32rem 0.52rem;
+        font-size: 11px;
+      }
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: var(--scroll-track); }
+    ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 9999px; }
+
+    .trap-highlight {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.16) 0%, rgba(244, 63, 94, 0.08) 100%) !important;
+      box-shadow: inset 3px 0 0 #f59e0b;
+    }
+
+    .table-row-themed:hover {
+      background-color: var(--bg-row-hover);
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent-primary);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- ===================================================================== -->
+  <!-- ULTRA-SLIM 64PX STICKY GLASSMORPHIC HEADER + LIGHT/DARK MODE TOGGLE   -->
+  <!-- ===================================================================== -->
+  <header class="hyper-header">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-2 sm:gap-3 relative z-10">
+
+      <!-- Left Brand Cluster -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="c34-emblem w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-white font-extrabold text-xs tracking-tighter select-none">
+          C34
+        </div>
+        <div class="flex flex-col justify-center">
+          <span class="t-primary font-extrabold text-xs sm:text-sm md:text-base tracking-tight leading-none whitespace-nowrap">
+            CRE34 Purchased Receivables
+          </span>
+          <div class="hidden lg:flex items-center gap-1.5 mt-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+            <span class="text-[10px] font-mono t-cyan tracking-tight leading-none whitespace-nowrap">
+              Effective: 01 Jan 2023 | Basel III &amp; CRE45 NPL Ref
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center/Right Single-Row 5-Tab SVG Navigation Dock -->
+      <div class="nav-scroll-shell">
+        <button
+          type="button"
+          id="nav-cue-left"
+          onclick="scrollNavDock(-150)"
+          aria-label="Scroll navigation left"
+          class="nav-fade-left opacity-0 pointer-events-none"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <nav id="primary-nav-dock" class="nav-dock p-1 rounded-xl flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full" aria-label="Module Navigation">
+          <button type="button" onclick="switchMainTab('overview')" id="nav-overview" class="nav-pill active border border-transparent px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <svg class="w-3.5 h-3.5 t-cyan shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span>Overview</span>
+            <span class="nav-dot w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          </button>
+
+          <button type="button" onclick="switchMainTab('calculator')" id="nav-calculator" class="nav-pill border border-transparent px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <svg class="w-3.5 h-3.5 t-indigo shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span>RWA &amp; Dilution Calc</span>
+            <span class="nav-dot w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          </button>
+
+          <button type="button" onclick="switchMainTab('matrix')" id="nav-matrix" class="nav-pill border border-transparent px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <svg class="w-3.5 h-3.5 t-emerald shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Rules Matrix</span>
+            <span class="nav-dot w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          </button>
+
+          <button type="button" onclick="switchMainTab('scenarios')" id="nav-scenarios" class="nav-pill border border-transparent px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <svg class="w-3.5 h-3.5 t-amber shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <span>4 Walkthroughs</span>
+            <span class="nav-dot w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          </button>
+
+          <button type="button" onclick="switchMainTab('simulator')" id="nav-simulator" class="nav-pill border border-transparent px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+            <svg class="w-3.5 h-3.5 t-rose shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>Compliance Sim</span>
+            <span class="nav-dot w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          </button>
+        </nav>
+
+        <button
+          type="button"
+          id="nav-cue-right"
+          onclick="scrollNavDock(150)"
+          aria-label="Scroll navigation right"
+          class="nav-fade-right opacity-0 pointer-events-none"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Tactile Animated Light / Dark Mode Toggle Button -->
+      <button
+        type="button"
+        id="theme-toggle-btn"
+        onclick="toggleTheme()"
+        aria-label="Toggle Light and Dark Mode"
+        title="Switch between Dark Quant Mode and Light Institutional Mode"
+        class="theme-toggle-btn shrink-0 h-9 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5 text-xs font-bold select-none"
+      >
+        <!-- Sun Icon (shown in Dark Mode to switch to Light) -->
+        <svg id="icon-sun" class="theme-icon-spin w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon Icon (shown in Light Mode to switch to Dark) -->
+        <svg id="icon-moon" class="theme-icon-spin hidden w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <span id="theme-toggle-label" class="hidden sm:inline">Light</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- MICRO TELEMETRY RIBBON -->
+  <div style="background: var(--bg-ribbon); border-bottom: 1px solid var(--border-subtle);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="font-bold uppercase tracking-wider text-[10px] t-muted">CRE34 Sequence:</span>
+        <span class="px-2 py-0.5 rounded badge-amber font-semibold">1. K_Dilution (Gross)</span>
+        <span class="t-muted">→</span>
+        <span class="px-2 py-0.5 rounded badge-cyan font-semibold">2. Net EAD = Gross − K_Dilution</span>
+        <span class="t-muted">→</span>
+        <span class="px-2 py-0.5 rounded badge-indigo font-semibold">3. Default RWA + Dilution RWA</span>
+        <span class="lg:hidden text-[10px] font-mono t-muted ml-1">Eff. 01 Jan 2023 | CRE45 Ref</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mono-num text-[11px] t-secondary">
+        <span><strong class="t-primary">Undrawn CCF:</strong> 40% Lock</span>
+        <span class="hidden sm:inline t-muted">|</span>
+        <span><strong class="t-primary">Dilution LGD:</strong> 100% Corp RW</span>
+        <span class="hidden sm:inline t-muted">|</span>
+        <span><strong class="t-primary">RW:</strong> 12.5 × K</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE                                                        -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- =================================================================== -->
+    <!-- MODULE 1: OVERVIEW, PIPELINE & CURVE VISUALIZER (CRE34.1 – 34.12)   -->
+    <!-- =================================================================== -->
+    <section id="tab-overview" class="tab-panel space-y-6">
+
+      <!-- Hero & Benchmark Summary -->
+      <div class="quant-card rounded-2xl p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-cyan text-xs font-bold">
+              <span>CRE34.1 – CRE34.12</span>
+              <span>•</span>
+              <span>Dual-Risk IRB Framework</span>
+            </div>
+            <h1 class="text-2xl font-extrabold tracking-tight t-primary">
+              Purchased Receivables: Default Risk &amp; Dilution Risk
+            </h1>
+            <p class="text-sm t-secondary leading-relaxed">
+              Purchased receivables require two separate IRB unexpected loss capital charges. First, the obligor can fail to pay due to insolvency (Default Risk). Second, non-cash credits such as product returns, quality disputes, and early-payment rebates can reduce the invoice balance (Dilution Risk). Banks must calculate both loss estimates on a strict stand-alone basis. Seller recourse and external guarantees are excluded from pool parameter estimation.
+            </p>
+            <div class="quant-subcard rounded-xl p-3.5 text-xs t-secondary leading-relaxed">
+              <strong class="t-primary">Concrete Banking Example:</strong> A bank buys a $100.00M pool of corporate trade invoices and grants a $50.00M revolving purchase line. Under CRE34.5, the 40% CCF produces $120.00M in Gross Exposure. The bank calculates $4.97M in Dilution Capital first, deducts $4.97M to get $115.03M in Net Default EAD, and then computes Default RWA.
+            </div>
+          </div>
+
+          <!-- Benchmark Terminal Flow -->
+          <div class="lg:col-span-5 terminal-panel rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b t-border pb-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider t-cyan">Benchmark Calculation ($120M Pool)</span>
+              <span class="px-2 py-0.5 rounded badge-indigo text-[11px] font-bold">F-IRB Senior</span>
+            </div>
+            <div class="space-y-2 text-xs mono-num">
+              <div class="flex justify-between">
+                <span class="t-muted">1. Gross Pool ($100M + 40%×$50M):</span>
+                <span class="font-bold t-primary">$120.00M</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="t-muted">2. K_Dilution (EL 0.40%, LGD 100%, 1y):</span>
+                <span class="font-bold t-amber">$4.97M (RWA $62.08M)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="t-muted">3. Net Default EAD ($120M − $4.97M):</span>
+                <span class="font-bold t-cyan">$115.03M</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="t-muted">4. Default (EL 0.60% → PD 1.50%, LGD 40%):</span>
+                <span class="font-bold t-indigo">RW 65.17% → $74.97M</span>
+              </div>
+              <div class="flex justify-between pt-1.5 border-t t-border">
+                <span class="t-primary font-semibold">5. Combined RWA (8% UL Capital):</span>
+                <span class="font-bold t-emerald">$137.05M ($10.96M)</span>
+              </div>
+            </div>
+            <button type="button" onclick="switchMainTab('calculator')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition">
+              Open Dual-Risk RWA &amp; Dilution Calculator →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual 5-Stage Mandatory Pipeline Diagram -->
+      <div class="quant-card rounded-2xl p-5 space-y-3.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-sm font-extrabold uppercase tracking-wider t-primary">Mandatory CRE34 Calculation Pipeline</h2>
+          <span class="text-xs font-mono t-muted">Sequential order prevents double-counting of dilution losses</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="quant-subcard rounded-xl p-3.5 border-t-2 border-t-sky-500">
+            <span class="text-[10px] font-mono font-bold t-cyan block">STAGE 1 • EXPOSURE</span>
+            <div class="text-xs font-extrabold t-primary mt-1">Gross Receivable Pool</div>
+            <p class="text-[11px] t-secondary mt-1 leading-relaxed">
+              Sum drawn receivables plus a fixed <strong>40% CCF</strong> on undrawn revolving purchase commitments (even under A-IRB).
+            </p>
+          </div>
+
+          <div class="quant-subcard rounded-xl p-3.5 border-t-2 border-t-amber-500">
+            <span class="text-[10px] font-mono font-bold t-amber block">STAGE 2 • CRE34.8–34.9</span>
+            <div class="text-xs font-extrabold t-primary mt-1">Compute K_Dilution</div>
+            <p class="text-[11px] t-secondary mt-1 leading-relaxed">
+              Apply Corporate IRB formula on Gross Exposure with <strong>PD = EL_Dilution</strong> and <strong>LGD = 100%</strong> for both retail and corporate pools.
+            </p>
+          </div>
+
+          <div class="quant-subcard rounded-xl p-3.5 border-t-2 border-t-cyan-500">
+            <span class="text-[10px] font-mono font-bold t-cyan block">STAGE 3 • CRE34.5–34.6</span>
+            <div class="text-xs font-extrabold t-primary mt-1">Net Default EAD</div>
+            <p class="text-[11px] t-secondary mt-1 leading-relaxed">
+              Subtract pre-mitigation <strong>K_Dilution</strong> from Gross Exposure to calculate the stand-alone Net Default EAD.
+            </p>
+          </div>
+
+          <div class="quant-subcard rounded-xl p-3.5 border-t-2 border-t-indigo-500">
+            <span class="text-[10px] font-mono font-bold t-indigo block">STAGE 4 • CRE34.2–34.7</span>
+            <div class="text-xs font-extrabold t-primary mt-1">Compute Default RWA</div>
+            <p class="text-[11px] t-secondary mt-1 leading-relaxed">
+              Evaluate Net Default EAD via Retail/QRRE, Corporate F-IRB (40% or 100% LGD), A-IRB, or Hybrid highest-RW rules.
+            </p>
+          </div>
+
+          <div class="quant-subcard rounded-xl p-3.5 border-t-2 border-t-emerald-500 sm:col-span-2 lg:col-span-1">
+            <span class="text-[10px] font-mono font-bold t-emerald block">STAGE 5 • CRE34.10–34.12</span>
+            <div class="text-xs font-extrabold t-primary mt-1">PPD &amp; CRM Substitution</div>
+            <p class="text-[11px] t-secondary mt-1 leading-relaxed">
+              Route refundable PPD to CRE40–45 securitisation rules and substitute eligible guarantor RW across covered risks.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Interactive Regulatory Pillar Cards -->
+      <div class="space-y-3.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-base font-extrabold t-primary">Four Core Regulatory Pillars</h2>
+          <span class="text-xs t-muted">Select any pillar card to inspect rules and concrete numeric examples</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <button type="button" onclick="selectOverviewCard(0)" data-ovcard="0" class="ov-card text-left quant-card rounded-2xl p-4 transition ring-2 ring-sky-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 rounded badge-cyan font-extrabold text-xs">Pillar 1</span>
+              <span class="text-[11px] font-mono t-cyan">CRE34.2–34.7</span>
+            </div>
+            <div class="font-bold text-sm t-primary">Default Risk: Top-Down vs Bottom-Up</div>
+            <p class="text-xs t-muted mt-1">Stand-alone PD/EL, 40% vs 100% LGD, SME Footnote 156, and Hybrid pools.</p>
+          </button>
+
+          <button type="button" onclick="selectOverviewCard(1)" data-ovcard="1" class="ov-card text-left quant-card rounded-2xl p-4 transition hover:border-sky-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 rounded badge-amber font-extrabold text-xs">Pillar 2</span>
+              <span class="text-[11px] font-mono t-muted">CRE34.8–34.9</span>
+            </div>
+            <div class="font-bold text-sm t-primary">Dilution Risk Mechanics</div>
+            <p class="text-xs t-muted mt-1">Returns, disputes, rebates (Fn 157), universal 100% LGD Corp RW, and 1y waiver.</p>
+          </button>
+
+          <button type="button" onclick="selectOverviewCard(2)" data-ovcard="2" class="ov-card text-left quant-card rounded-2xl p-4 transition hover:border-sky-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 rounded badge-indigo font-extrabold text-xs">Pillar 3</span>
+              <span class="text-[11px] font-mono t-muted">CRE34.10–34.11</span>
+            </div>
+            <div class="font-bold text-sm t-primary">Purchase Price Discounts (PPD)</div>
+            <p class="text-xs t-muted mt-1">Zero relief on non-refundable PPD vs CRE40–45 &amp; CRE45 NPL securitisation link.</p>
+          </button>
+
+          <button type="button" onclick="selectOverviewCard(3)" data-ovcard="3" class="ov-card text-left quant-card rounded-2xl p-4 transition hover:border-sky-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 rounded badge-emerald font-extrabold text-xs">Pillar 4</span>
+              <span class="text-[11px] font-mono t-muted">CRE34.12 &amp; Fn 158</span>
+            </div>
+            <div class="font-bold text-sm t-primary">Credit Risk Mitigants (CRM)</div>
+            <p class="text-xs t-muted mt-1">Dual vs single-risk guarantor RW substitution and sub-A- dilution discretion.</p>
+          </button>
+        </div>
+
+        <div id="ov-card-spotlight" class="quant-card rounded-2xl p-5 border-l-4 border-l-sky-500"></div>
+      </div>
+
+      <!-- Interactive Theme-Aware Vasicek IRB Risk-Weight Curve Visualizer -->
+      <div class="quant-card rounded-2xl p-5 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-extrabold t-primary">Vasicek IRB Risk-Weight Curve Visualizer (Pool EL: 0.05% – 4.50%)</h3>
+            <p class="text-xs t-muted">Hover across the chart to inspect exact Vasicek risk weights across all six CRE34 exposure curves.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-dil" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span class="t-primary font-semibold">Dilution (LGD 100%, 1y)</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-nonsen" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+              <span class="t-primary font-semibold">Corp Non-Sen (LGD 100%, 2.5y)</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-sen" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+              <span class="t-primary font-semibold">Corp Senior (LGD 40%, 2.5y)</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-sme" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+              <span class="t-primary font-semibold">Corp SME €15M (Fn 156)</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-oth" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span class="t-primary font-semibold">Other Retail (LGD 40%)</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg quant-subcard cursor-pointer">
+              <input type="checkbox" id="curve-qrre" checked onchange="drawOverviewCurveChart()" class="rounded" />
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span class="t-primary font-semibold">QRRE Retail (LGD 40%)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="relative w-full h-72 quant-subcard rounded-xl p-2">
+          <canvas id="overviewCurveCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+          <div id="overviewCurveTooltip" style="background: var(--tooltip-bg); border: 1px solid var(--border-strong);" class="hidden pointer-events-none absolute z-20 rounded-xl px-3 py-2 text-[11px] mono-num shadow-xl"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MODULE 2: VASICEK DUAL-RISK RWA & K_DILUTION CALCULATOR             -->
+    <!-- =================================================================== -->
+    <section id="tab-calculator" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Parameter Workbench -->
+        <div class="lg:col-span-5 quant-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b t-border pb-3">
+            <div>
+              <h2 class="text-base font-extrabold t-primary">Vasicek Dual-Risk Pool Workbench</h2>
+              <p class="text-xs t-muted">Exact ASRF normal &amp; inverse-normal IRB calculations.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg badge-cyan font-mono text-[11px] font-bold">CRE34 Engine</span>
+          </div>
+
+          <!-- 1. Drawn & Undrawn Commitments -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="calc-drawn" class="block text-[11px] font-bold uppercase tracking-wider t-secondary mb-1">Drawn Pool ($M)</label>
+              <input
+                type="text"
+                inputmode="decimal"
+                id="calc-drawn"
+                value="100.00"
+                oninput="handleNumericKeystroke('calc-drawn', 'warn-drawn', updateCalculator)"
+                onblur="formatNumericOnBlur('calc-drawn', 'warn-drawn', 2, updateCalculator)"
+                class="quant-input w-full rounded-xl px-3 py-2 text-xs font-bold mono-num"
+              />
+              <div id="warn-drawn" class="hidden mt-1 text-amber-500 text-[10px] font-semibold">Clamped negative to 0</div>
+            </div>
+            <div>
+              <label for="calc-undrawn" class="block text-[11px] font-bold uppercase tracking-wider t-secondary mb-1">Undrawn Line ($M • 40% CCF)</label>
+              <input
+                type="text"
+                inputmode="decimal"
+                id="calc-undrawn"
+                value="50.00"
+                oninput="handleNumericKeystroke('calc-undrawn', 'warn-undrawn', updateCalculator)"
+                onblur="formatNumericOnBlur('calc-undrawn', 'warn-undrawn', 2, updateCalculator)"
+                class="quant-input w-full rounded-xl px-3 py-2 text-xs font-bold mono-num"
+              />
+              <div id="warn-undrawn" class="hidden mt-1 text-amber-500 text-[10px] font-semibold">Clamped negative to 0</div>
+            </div>
+          </div>
+
+          <!-- 2. Pool Classification -->
+          <div>
+            <label for="calc-mode" class="block text-xs font-bold uppercase tracking-wider t-secondary mb-1.5">
+              Pool Classification &amp; IRB Treatment
+            </label>
+            <select id="calc-mode" onchange="handleCalcModeChange()" class="quant-input w-full rounded-xl px-3 py-2 text-xs font-semibold">
+              <option value="FIRB_UNDEC">Corporate F-IRB Top-Down: Undecomposed EL (CRE34.5(1))</option>
+              <option value="FIRB_PD">Corporate F-IRB Top-Down: Decomposed Reliable PD (CRE34.5(2))</option>
+              <option value="AIRB">Corporate A-IRB Top-Down: Infer PD or LGD (CRE34.6)</option>
+              <option value="RETAIL_OTHER">Purchased Retail: Other Retail Function (CRE34.3)</option>
+              <option value="RETAIL_QRRE">Purchased Retail: Qualifying Revolving QRRE (CRE34.2)</option>
+              <option value="HYBRID">Hybrid Unseparated Pool: Highest-Capital Rule (CRE34.2)</option>
+            </select>
+          </div>
+
+          <!-- 3. Stand-Alone Default Risk Parameters -->
+          <div class="quant-subcard rounded-xl p-3.5 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold t-cyan">Stand-Alone Default Inputs</span>
+              <span id="calc-pd-lgd-pill" class="text-[11px] font-mono px-2 py-0.5 rounded badge-cyan">PD 1.50% | LGD 40%</span>
+            </div>
+
+            <div id="box-seniority">
+              <label for="calc-seniority" class="block text-[11px] font-semibold t-secondary mb-1">Corporate Claim Seniority (CRE34.5(1))</label>
+              <select id="calc-seniority" onchange="updateCalculator()" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                <option value="SENIOR">Exclusively Senior Claims → LGD = 40%, PD = EL / 0.40</option>
+                <option value="NONSENIOR">Non-Senior / Commingled Lien → LGD = 100%, PD = EL</option>
+              </select>
+            </div>
+
+            <div id="box-airb-infer" class="hidden">
+              <label for="calc-airb-method" class="block text-[11px] font-semibold t-secondary mb-1">A-IRB Parameter Inference (CRE34.6)</label>
+              <select id="calc-airb-method" onchange="handleCalcModeChange()" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                <option value="INFER_PD">Input Long-Run EL + LGD → Infer PD = EL / LGD</option>
+                <option value="INFER_LGD">Input Long-Run EL + Reliable PD → Infer LGD = EL / PD</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div id="box-el-def">
+                <label for="calc-el-def" class="block text-[11px] t-secondary mb-1">1-Yr Default EL (%)</label>
+                <input type="text" inputmode="decimal" id="calc-el-def" value="0.60" oninput="handleNumericKeystroke('calc-el-def', null, updateCalculator)" onblur="formatNumericOnBlur('calc-el-def', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-bold mono-num" />
+              </div>
+              <div id="box-pd-def" class="hidden">
+                <label for="calc-pd-def" class="block text-[11px] t-secondary mb-1">Stand-Alone PD (%)</label>
+                <input type="text" inputmode="decimal" id="calc-pd-def" value="1.50" oninput="handleNumericKeystroke('calc-pd-def', null, updateCalculator)" onblur="formatNumericOnBlur('calc-pd-def', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-bold mono-num" />
+              </div>
+              <div id="box-lgd-def" class="hidden">
+                <label for="calc-lgd-def" class="block text-[11px] t-secondary mb-1">Long-Run LGD (%)</label>
+                <input type="text" inputmode="decimal" id="calc-lgd-def" value="40.00" oninput="handleNumericKeystroke('calc-lgd-def', null, updateCalculator)" onblur="formatNumericOnBlur('calc-lgd-def', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-bold mono-num" />
+              </div>
+            </div>
+
+            <!-- Footnote 156 SME Firm-Size Relief -->
+            <div id="box-sme" class="pt-2 border-t t-border space-y-2">
+              <label class="flex items-center justify-between text-xs cursor-pointer">
+                <span class="t-secondary font-medium">Weighted SME Turnover Verified (Footnote 156)</span>
+                <input type="checkbox" id="calc-sme-avail" onchange="updateCalculator()" class="h-4 w-4 rounded" />
+              </label>
+              <div id="box-sme-size" class="hidden flex items-center justify-between gap-2">
+                <span class="text-[11px] t-muted">Avg Obligor Turnover (€M / $M, 5–50):</span>
+                <input type="text" inputmode="decimal" id="calc-sme-turn" value="18.00" oninput="handleNumericKeystroke('calc-sme-turn', null, updateCalculator)" onblur="formatNumericOnBlur('calc-sme-turn', null, 2, updateCalculator)" class="quant-input w-24 rounded-lg px-2 py-1 text-xs font-bold mono-num text-right" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Effective Maturity M & CRE34.7 Undrawn Trigger -->
+          <div id="box-maturity" class="quant-subcard rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold t-indigo">Effective Maturity M &amp; CRE34.7 Trigger</span>
+              <span id="calc-mat-pill" class="text-[11px] font-mono t-indigo">Drawn 1.0y | Undrawn 1.0y</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-[11px]">
+              <div>
+                <label for="calc-m-drawn" class="block t-muted mb-1">Drawn M (y)</label>
+                <input type="text" inputmode="decimal" id="calc-m-drawn" value="1.00" oninput="handleNumericKeystroke('calc-m-drawn', null, updateCalculator)" onblur="formatNumericOnBlur('calc-m-drawn', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2 py-1 font-bold mono-num" />
+              </div>
+              <div>
+                <label for="calc-m-inv" class="block t-muted mb-1">Max Inv (y)</label>
+                <input type="text" inputmode="decimal" id="calc-m-inv" value="0.50" oninput="handleNumericKeystroke('calc-m-inv', null, updateCalculator)" onblur="formatNumericOnBlur('calc-m-inv', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2 py-1 font-bold mono-num" />
+              </div>
+              <div>
+                <label for="calc-m-fac" class="block t-muted mb-1">Rem Fac (y)</label>
+                <input type="text" inputmode="decimal" id="calc-m-fac" value="2.50" oninput="handleNumericKeystroke('calc-m-fac', null, updateCalculator)" onblur="formatNumericOnBlur('calc-m-fac', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2 py-1 font-bold mono-num" />
+              </div>
+            </div>
+            <label class="flex items-center justify-between text-xs pt-1 cursor-pointer">
+              <span class="t-secondary font-medium">Effective Early-Amortisation / Covenant Triggers</span>
+              <input type="checkbox" id="calc-cov-active" checked onchange="updateCalculator()" class="h-4 w-4 rounded" />
+            </label>
+          </div>
+
+          <!-- 5. Dilution Risk Settings (CRE34.8 – 34.9) -->
+          <div class="quant-subcard rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold t-amber">Dilution Risk Controls (CRE34.8)</span>
+              <span id="calc-dil-pill" class="text-[11px] font-mono t-amber">LGD 100% | M=1.0y</span>
+            </div>
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <label for="calc-dil-materiality" class="t-secondary font-medium">Dilution Materiality:</label>
+              <select id="calc-dil-materiality" onchange="updateCalculator()" class="quant-input rounded-lg px-2.5 py-1 text-xs font-semibold">
+                <option value="MATERIAL">Material Dilution Risk Applies</option>
+                <option value="IMMATERIAL">Immateriality Demonstrated to Supervisor</option>
+              </select>
+            </div>
+            <div id="box-dil-inputs" class="space-y-2 pt-1">
+              <div class="flex items-center justify-between gap-2">
+                <label for="calc-el-dil" class="text-[11px] t-secondary">1-Year Stand-Alone Dilution EL (%):</label>
+                <input type="text" inputmode="decimal" id="calc-el-dil" value="0.40" oninput="handleNumericKeystroke('calc-el-dil', null, updateCalculator)" onblur="formatNumericOnBlur('calc-el-dil', null, 2, updateCalculator)" class="quant-input w-24 rounded-lg px-2.5 py-1 text-xs font-bold mono-num text-right" />
+              </div>
+              <label class="flex items-center justify-between text-xs cursor-pointer">
+                <span class="t-secondary font-medium">Monitored &amp; Resolved Within 1 Year (M = 1.0y)</span>
+                <input type="checkbox" id="calc-dil-1y" checked onchange="updateCalculator()" class="h-4 w-4 rounded" />
+              </label>
+            </div>
+          </div>
+
+          <!-- 6. Purchase Price Discount (PPD) & Guarantee Substitution -->
+          <div class="quant-subcard rounded-xl p-3.5 space-y-2.5">
+            <span class="text-xs font-bold t-emerald block">Purchase Price Discount &amp; Guarantees</span>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+              <div class="sm:col-span-2">
+                <label for="calc-ppd-type" class="block text-[11px] t-secondary mb-1">PPD Structure (CRE34.10)</label>
+                <select id="calc-ppd-type" onchange="updateCalculator()" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                  <option value="NONE">No Purchase Price Discount</option>
+                  <option value="NON_REF">Non-Refundable PPD (Zero RWA/EL Relief)</option>
+                  <option value="REF">Refundable PPD (CRE40–45 Securitisation)</option>
+                </select>
+              </div>
+              <div id="box-ppd-amt" class="hidden">
+                <label for="calc-ppd-amt" class="block text-[11px] t-muted mb-1">PPD ($M)</label>
+                <input type="text" inputmode="decimal" id="calc-ppd-amt" value="5.00" oninput="handleNumericKeystroke('calc-ppd-amt', null, updateCalculator)" onblur="formatNumericOnBlur('calc-ppd-amt', null, 2, updateCalculator)" class="quant-input w-full rounded-lg px-2 py-1.5 text-xs font-bold mono-num text-right" />
+              </div>
+            </div>
+
+            <div class="pt-2 border-t t-border space-y-2">
+              <label for="calc-crm-scope" class="block text-[11px] t-secondary">Seller / 3rd-Party Guarantee (CRE34.12)</label>
+              <select id="calc-crm-scope" onchange="updateCalculator()" class="quant-input w-full rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                <option value="NONE">None (Stand-Alone Pool Risk)</option>
+                <option value="DEFAULT_ONLY">Covers Default Risk Only (CRE34.12(2))</option>
+                <option value="DILUTION_ONLY">Covers Dilution Risk Only (CRE34.12(2) &amp; Fn 158)</option>
+                <option value="BOTH">Covers Both Default &amp; Dilution Risk (CRE34.12(1))</option>
+              </select>
+
+              <div id="box-crm-params" class="hidden space-y-2 pt-1">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="t-secondary font-medium">Proportional Coverage (%):</span>
+                  <span id="lbl-crm-cov" class="mono-num font-bold t-cyan">80%</span>
+                </div>
+                <input type="range" id="calc-crm-slider" min="0" max="100" step="5" value="80" oninput="updateCalculator()" class="w-full cursor-pointer" />
+                <div class="flex items-center justify-between gap-2 text-[11px]">
+                  <label for="calc-crm-rw" class="t-secondary">Guarantor IRB Risk Weight (%):</label>
+                  <input type="text" inputmode="decimal" id="calc-crm-rw" value="20.00" oninput="handleNumericKeystroke('calc-crm-rw', null, updateCalculator)" onblur="formatNumericOnBlur('calc-crm-rw', null, 2, updateCalculator)" class="quant-input w-24 rounded-lg px-2 py-1 font-bold mono-num text-right" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Live KPI Outputs, PPD Alerts, Audit Trail & Canvas Breakdown -->
+        <div class="lg:col-span-7 space-y-5">
+
+          <!-- 6 Live KPI Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-slate-400">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Gross Exposure</span>
+              <div id="kpi-gross-ead" class="text-xl font-extrabold t-primary mono-num mt-1">$120.00M</div>
+              <span id="kpi-gross-sub" class="inline-block mt-1 text-[11px] t-muted mono-num">$100M + 40%×$50M</span>
+            </div>
+
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-amber-500">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">K_Dilution &amp; RWA</span>
+              <div id="kpi-kdil" class="text-xl font-extrabold t-amber mono-num mt-1">$4.97M</div>
+              <span id="kpi-dil-rwa" class="inline-block mt-1 text-[11px] font-semibold t-amber mono-num">Dil RWA: $62.08M</span>
+            </div>
+
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-sky-500">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Net Default EAD</span>
+              <div id="kpi-net-ead" class="text-xl font-extrabold t-cyan mono-num mt-1">$115.03M</div>
+              <span class="inline-block mt-1 text-[11px] t-muted mono-num">Gross − K_Dilution</span>
+            </div>
+
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-indigo-500">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Default RWA</span>
+              <div id="kpi-def-rwa" class="text-xl font-extrabold t-indigo mono-num mt-1">$74.97M</div>
+              <span id="kpi-def-rw" class="inline-block mt-1 text-[11px] font-semibold t-indigo mono-num">Pre-CRM RW: 65.17%</span>
+            </div>
+
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-emerald-500">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Combined RWA</span>
+              <div id="kpi-tot-rwa" class="text-xl font-extrabold t-emerald mono-num mt-1">$137.05M</div>
+              <span id="kpi-tot-density" class="inline-block mt-1 text-[11px] t-muted mono-num">114.2% of Gross</span>
+            </div>
+
+            <div class="quant-card p-4 rounded-2xl border-t-2 border-t-rose-500">
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Min 8% UL Capital</span>
+              <div id="kpi-ul-cap" class="text-xl font-extrabold t-rose mono-num mt-1">$10.96M</div>
+              <span id="kpi-el-sub" class="inline-block mt-1 text-[11px] t-muted mono-num">Pool EL: $1.17M</span>
+            </div>
+          </div>
+
+          <!-- PPD Regulatory Alert Banners -->
+          <div id="banner-nonref-ppd" class="hidden rounded-2xl p-4 badge-amber text-xs leading-relaxed">
+            <strong>CRE34.10 Non-Refundable PPD Alert:</strong> The <span id="lbl-nonref-amt" class="mono-num font-bold">$5.00M</span> non-refundable purchase price discount does <strong>not</strong> reduce RWA and does <strong>not</strong> count toward provisions in the CRE35 Expected Loss comparison.
+          </div>
+
+          <div id="banner-ref-ppd" class="hidden rounded-2xl p-4 badge-indigo text-xs leading-relaxed">
+            <strong>CRE34.10 / CRE40–CRE45 Securitisation First-Loss Alert:</strong> The <span id="lbl-ref-amt" class="mono-num font-bold">$5.00M</span> refundable purchase price discount provides first-loss protection. The purchasing bank may recognise it under CRE40–CRE45 (including CRE45 for NPL securitisations), while the seller must treat the refundable amount as a first-loss securitisation position.
+          </div>
+
+          <!-- Step-by-Step Vasicek Audit Trace -->
+          <div class="terminal-panel rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b t-border pb-2.5">
+              <h3 class="text-xs font-bold uppercase tracking-wider t-cyan">Step-by-Step Regulatory Formula Trace</h3>
+              <span id="calc-active-clause" class="text-[11px] font-mono t-muted">CRE34.5(1) + CRE34.8</span>
+            </div>
+            <div id="calc-audit-steps" class="space-y-2 text-xs"></div>
+          </div>
+
+          <!-- Theme-Aware Stacked/Grouped Canvas Breakdown Chart -->
+          <div class="quant-card rounded-2xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h4 class="text-xs font-extrabold uppercase tracking-wider t-primary">Exposure Deduction &amp; Stacked RWA Breakdown ($M)</h4>
+                <p class="text-xs t-muted">Compares Gross Exposure, K_Dilution deduction, Net Default EAD, Pre-CRM Stacked RWA, and Post-CRM Stacked RWA.</p>
+              </div>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded badge-cyan">Theme-Reactive Canvas</span>
+            </div>
+            <div class="relative h-60 w-full quant-subcard rounded-xl p-2">
+              <canvas id="calcWaterfallCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MODULE 3: CLAUSE-BY-CLAUSE MATRIX & AUDIT TRAP LENS                 -->
+    <!-- =================================================================== -->
+    <section id="tab-matrix" class="tab-panel hidden space-y-5">
+      <div class="quant-card rounded-2xl p-5 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-extrabold t-primary">CRE34 Clause-by-Clause Matrix &amp; Audit Trap Lens</h2>
+            <p class="text-xs t-muted mt-0.5">
+              Searchable specification of CRE34.1 through CRE34.12 and Footnotes 156, 157, and 158 with concrete banking examples.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="setMatrixDomain('ALL')" data-mdom="ALL" class="mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm transition">All Clauses (15)</button>
+            <button type="button" onclick="setMatrixDomain('DEFAULT')" data-mdom="DEFAULT" class="mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">Default Risk</button>
+            <button type="button" onclick="setMatrixDomain('DILUTION')" data-mdom="DILUTION" class="mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">Dilution Risk</button>
+            <button type="button" onclick="setMatrixDomain('PPD_CRM')" data-mdom="PPD_CRM" class="mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">PPD, Securitisation &amp; CRM</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-3 border-t t-border">
+          <div class="md:col-span-7">
+            <input
+              type="text"
+              id="matrix-search"
+              oninput="renderRulesMatrix()"
+              placeholder="Search clauses (e.g., hybrid, 40%, dilution, refundable, CRE45, Footnote 156, A-)..."
+              class="quant-input w-full rounded-xl px-3.5 py-2 text-xs"
+            />
+          </div>
+          <div class="md:col-span-5">
+            <label class="w-full flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl badge-amber cursor-pointer">
+              <span class="text-xs font-bold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                Audit Trap &amp; Securitisation Lens
+              </span>
+              <input type="checkbox" id="trap-lens-toggle" onchange="renderRulesMatrix()" class="h-4 w-4 rounded" />
+            </label>
+          </div>
+        </div>
+
+        <div id="trap-lens-banner" class="hidden rounded-xl badge-amber p-4 text-xs space-y-1.5">
+          <div class="font-extrabold uppercase tracking-wider text-[11px]">Critical Compliance Pitfalls Highlighted Below</div>
+          <p class="leading-relaxed">
+            Highlighted rows expose major validation failures: netting seller recourse into stand-alone PD/LGD (CRE34.3/34.4), using internal A-IRB CCFs instead of 40% on undrawn lines (CRE34.6), omitting CRE34.7 early-amortisation triggers, misclassifying refundable PPD outside CRE40–45 / CRE45 NPL securitisations (CRE34.10), and claiming SME relief without obligor-weighted turnover data (Footnote 156).
+          </p>
+        </div>
+      </div>
+
+      <div class="quant-card rounded-2xl overflow-hidden">
+        <div style="background: var(--bg-table-head); border-bottom: 1px solid var(--border-subtle);" class="px-5 py-3 flex flex-wrap items-center justify-between gap-2">
+          <h3 class="font-bold text-sm t-primary">BCBS CRE34 Regulatory Schedule</h3>
+          <span id="matrix-count-badge" class="text-xs t-cyan mono-num font-bold">Showing 15 of 15 entries</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr style="background: var(--bg-elevated); border-bottom: 1px solid var(--border-subtle);" class="t-secondary">
+                <th class="py-3 px-4 font-bold w-28">Clause</th>
+                <th class="py-3 px-3 font-bold w-40">Domain</th>
+                <th class="py-3 px-4 font-bold">Regulatory Rule</th>
+                <th class="py-3 px-4 font-bold w-56">Formula / Settings</th>
+                <th class="py-3 px-4 font-bold w-64">Concrete Banking Example</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody" class="divide-y t-border align-top"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MODULE 4: 4 REAL-WORLD BANKING SCENARIO WALKTHROUGHS                -->
+    <!-- =================================================================== -->
+    <section id="tab-scenarios" class="tab-panel hidden space-y-5">
+      <div class="quant-card rounded-2xl p-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-extrabold t-primary">4 Real-World Banking Scenario Walkthroughs</h2>
+            <p class="text-xs t-muted mt-0.5">
+              Compare Base Structures against Stress / Audit Findings and load any scenario straight into the Vasicek Calculator.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="selectScenario(0)" data-scen="0" class="scen-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm transition">
+              1. $150M Supply-Chain F-IRB
+            </button>
+            <button type="button" onclick="selectScenario(1)" data-scen="1" class="scen-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">
+              2. $90M Hybrid E-Commerce
+            </button>
+            <button type="button" onclick="selectScenario(2)" data-scen="2" class="scen-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">
+              3. $200M A-IRB Auto-Parts
+            </button>
+            <button type="button" onclick="selectScenario(3)" data-scen="3" class="scen-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition">
+              4. $120M Export Credit Ins.
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div id="scenario-left" class="lg:col-span-7 space-y-5"></div>
+        <div class="lg:col-span-5 space-y-5">
+          <div id="scenario-right-kpis"></div>
+          <div class="quant-card rounded-2xl p-4">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider t-primary mb-2">Base Case vs. Stress / Audit Finding ($M)</h4>
+            <div class="relative h-56 w-full quant-subcard rounded-xl p-2">
+              <canvas id="scenarioCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MODULE 5: DATA QUALITY & GOVERNANCE COMPLIANCE SIMULATOR            -->
+    <!-- =================================================================== -->
+    <section id="tab-simulator" class="tab-panel hidden space-y-5">
+      <div class="quant-card rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold t-primary">Data Quality &amp; Governance Compliance Simulator</h2>
+          <p class="text-xs t-muted mt-0.5">
+            Adjust the 6 governance pillar sliders and toggle 8 CRE34 audit defect flags to compute exact Vasicek RWA overrides.
+          </p>
+        </div>
+        <button type="button" onclick="resetSimulatorClean()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-sm transition shrink-0">
+          Restore 100% Clean Audit File
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Governance Sliders & Defect Toggles -->
+        <div class="lg:col-span-7 space-y-5">
+
+          <!-- 1. Portfolio Exposure Parameters -->
+          <div class="quant-card rounded-2xl p-5 space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider t-cyan border-b t-border pb-2">
+              1. Reference Corporate SME Factoring Pool ($100M Drawn + $50M Undrawn)
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label for="sim-drawn" class="block font-semibold t-secondary mb-1">Drawn Pool ($M)</label>
+                <input type="text" inputmode="decimal" id="sim-drawn" value="100.00" oninput="handleNumericKeystroke('sim-drawn', null, runComplianceSimulator)" onblur="formatNumericOnBlur('sim-drawn', null, 2, runComplianceSimulator)" class="quant-input w-full rounded-xl px-3 py-1.5 font-bold mono-num" />
+              </div>
+              <div>
+                <label for="sim-undrawn" class="block font-semibold t-secondary mb-1">Undrawn Line ($M)</label>
+                <input type="text" inputmode="decimal" id="sim-undrawn" value="50.00" oninput="handleNumericKeystroke('sim-undrawn', null, runComplianceSimulator)" onblur="formatNumericOnBlur('sim-undrawn', null, 2, runComplianceSimulator)" class="quant-input w-full rounded-xl px-3 py-1.5 font-bold mono-num" />
+              </div>
+              <div>
+                <label for="sim-el" class="block font-semibold t-secondary mb-1">Base Default EL (%)</label>
+                <input type="text" inputmode="decimal" id="sim-el" value="0.60" oninput="handleNumericKeystroke('sim-el', null, runComplianceSimulator)" onblur="formatNumericOnBlur('sim-el', null, 2, runComplianceSimulator)" class="quant-input w-full rounded-xl px-3 py-1.5 font-bold mono-num" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Six Interactive Governance Pillar Sliders -->
+          <div class="quant-card rounded-2xl p-5 space-y-3.5">
+            <div class="flex items-center justify-between border-b t-border pb-2">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider t-indigo">2. Six Governance Pillar Sliders (0 – 100)</h3>
+              <span class="text-[11px] t-muted">Sliders below 60 trigger governance add-ons</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">1. Pool Homogeneity &amp; Separation</span>
+                  <span id="lbl-gp-1" class="mono-num t-cyan">90%</span>
+                </div>
+                <input type="range" id="gp-1" min="0" max="100" step="5" value="90" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">2. Stand-Alone Default/Dilution Data</span>
+                  <span id="lbl-gp-2" class="mono-num t-cyan">85%</span>
+                </div>
+                <input type="range" id="gp-2" min="0" max="100" step="5" value="85" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">3. Seller Servicing &amp; Lockbox Control</span>
+                  <span id="lbl-gp-3" class="mono-num t-cyan">80%</span>
+                </div>
+                <input type="range" id="gp-3" min="0" max="100" step="5" value="80" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">4. Legal Seniority &amp; True-Sale Perfection</span>
+                  <span id="lbl-gp-4" class="mono-num t-amber">55%</span>
+                </div>
+                <input type="range" id="gp-4" min="0" max="100" step="5" value="55" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">5. Covenant &amp; Early Amort. Monitoring</span>
+                  <span id="lbl-gp-5" class="mono-num t-cyan">85%</span>
+                </div>
+                <input type="range" id="gp-5" min="0" max="100" step="5" value="85" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="quant-subcard rounded-xl p-3 space-y-1.5">
+                <div class="flex justify-between font-semibold">
+                  <span class="t-primary">6. Dilution Tracking (&lt;1 Yr Resolution)</span>
+                  <span id="lbl-gp-6" class="mono-num t-amber">50%</span>
+                </div>
+                <input type="range" id="gp-6" min="0" max="100" step="5" value="50" oninput="runComplianceSimulator()" class="w-full cursor-pointer" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Eight Toggleable CRE34 Audit & Data Defect Flags -->
+          <div class="quant-card rounded-2xl p-5 space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider t-rose border-b t-border pb-2">
+              3. Eight CRE34 Supervisory Audit &amp; Data Defect Flags
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-senior" checked onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">1. Unverified Seniority (CRE34.5(1))</strong>
+                  Forces Corporate F-IRB LGD from 40% to 100% across drawn and undrawn pools.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-dil1y" checked onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">2. Unresolved Dilution &gt;1 Yr (CRE34.8)</strong>
+                  Revokes 1-year dilution maturity waiver, raising M_Dilution to 2.5 years.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-hybrid" onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">3. Unseparated Hybrid Pool (CRE34.2)</strong>
+                  Applies highest-capital exposure function penalty across 100% of receivables.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-sme" checked onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">4. Missing Obligor Turnover (Fn 156)</strong>
+                  Removes €18M SME firm-size correlation relief completely.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-recourse" onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">5. Seller Recourse Netted in EL (CRE34.4)</strong>
+                  Restores stand-alone default EL (+0.35% gross obligor loss adjustment).
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-ccf" onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">6. Internal 15% CCF Used (CRE34.6)</strong>
+                  Overrides internal A-IRB CCF model with mandatory 40% undrawn CCF lock.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-triggers" onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">7. Missing Early-Amort. Triggers (CRE34.7)</strong>
+                  Spikes undrawn M from 1.0y to 3.5y (0.5y max invoice + 3.0y facility).
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl quant-subcard cursor-pointer">
+                <input type="checkbox" id="def-ppd" onchange="runComplianceSimulator()" class="mt-0.5 h-4 w-4 rounded" />
+                <span>
+                  <strong class="t-primary block">8. Non-Refundable PPD Deducted (CRE34.10)</strong>
+                  Reverses improper $8.00M RWA deduction taken on non-refundable discount.
+                </span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Compliance Gauge, Exact Override RWA & Remediation Plan -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="terminal-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider t-cyan">Supervisory Audit Engine</span>
+              <span id="sim-verdict-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold badge-rose">
+                Overrides Active
+              </span>
+            </div>
+
+            <div class="flex items-center gap-4 p-3.5 rounded-xl quant-subcard">
+              <div class="relative w-16 h-16 shrink-0 flex items-center justify-center">
+                <svg class="w-16 h-16 -rotate-90" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="26" stroke="rgba(148,163,184,0.22)" stroke-width="6" fill="none" />
+                  <circle id="sim-ring" cx="32" cy="32" r="26" stroke="#f43f5e" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="72" stroke-linecap="round" fill="none" class="transition-all duration-300" />
+                </svg>
+                <span id="sim-score-txt" class="absolute text-xs font-extrabold mono-num t-primary">56%</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-xs font-bold t-primary">Data Quality &amp; Compliance Score</div>
+                <p id="sim-score-desc" class="text-[11px] t-secondary mt-0.5 leading-snug">
+                  Active CRE34 overrides increase pool LGD, correlation, and dilution maturity.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl quant-subcard">
+                <span class="text-[11px] t-muted block">Clean Compliant RWA</span>
+                <div id="sim-out-base" class="text-base font-extrabold t-primary mono-num mt-0.5">$126.40M</div>
+                <span id="sim-out-base-cap" class="text-[11px] mono-num t-cyan">8% Cap: $10.11M</span>
+              </div>
+              <div class="p-3 rounded-xl quant-subcard border border-rose-500/40">
+                <span class="text-[11px] t-muted block">Supervisory Override RWA</span>
+                <div id="sim-out-audit" class="text-base font-extrabold t-rose mono-num mt-0.5">$204.85M</div>
+                <span id="sim-out-audit-cap" class="text-[11px] mono-num t-rose">8% Cap: $16.39M</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl badge-cyan space-y-1.5 text-xs">
+              <div class="font-extrabold uppercase tracking-wider text-[11px]">Exact Supervisory Capital Add-On</div>
+              <div class="flex justify-between">
+                <span>RWA Capital Add-On:</span>
+                <span id="sim-addon-rwa" class="mono-num font-extrabold t-primary">+$78.45M</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Additional 8% UL Capital Charge:</span>
+                <span id="sim-addon-cap" class="mono-num font-extrabold t-rose">+$6.28M</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="quant-card rounded-2xl p-4">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider t-primary mb-2">Compliant Baseline vs. Supervisory Override ($M)</h4>
+            <div class="relative h-44 w-full quant-subcard rounded-xl p-2">
+              <canvas id="simulatorCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+
+          <div class="quant-card rounded-2xl p-5 space-y-2.5">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider t-primary">Prioritized Remediation Action Plan</h4>
+            <ul id="sim-remediation-list" class="space-y-2 text-xs"></ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- EXCLUSIVE FOOTER SECTION                                              -->
+  <!-- ===================================================================== -->
+  <footer style="background: var(--footer-bg); border-top: 1px solid var(--border-subtle);" class="mt-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <div class="t-muted text-center sm:text-left">
+        BCBS CRE34 IRB Purchased Receivables Risk Terminal • Effective 01 Jan 2023 (CRE40–CRE45 Linked)
+      </div>
+      <div class="t-primary font-semibold text-center sm:text-right">
+        Prompt Developer: Sudharsanan k, Risk Analyst | <a href="mailto:casudharsanan.k@gmail.com" class="t-cyan hover:underline">casudharsanan.k@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- THEME CONTROLLER, VASICEK ENGINE & DYNAMIC CANVAS CHARTS              -->
+  <!-- ===================================================================== -->
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. LIGHT / DARK THEME CONTROLLER (PERSISTED IN LOCALSTORAGE)
+    // -----------------------------------------------------------------------
+    let currentTheme = 'dark';
+
+    function applyTheme(theme) {
+      currentTheme = (theme === 'light') ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      try {
+        localStorage.setItem('cre34_theme', currentTheme);
+      } catch (e) {
+        // Ignore storage restrictions in sandboxed iframes
+      }
+
+      const sunIcon = document.getElementById('icon-sun');
+      const moonIcon = document.getElementById('icon-moon');
+      const label = document.getElementById('theme-toggle-label');
+
+      if (currentTheme === 'dark') {
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+        label.textContent = 'Light';
+      } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        label.textContent = 'Dark';
+      }
+
+      // Re-render all HTML5 Canvas charts immediately so axes, grids & labels match active theme
+      redrawActiveCanvases();
+    }
+
+    function toggleTheme() {
+      applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+
+    function getThemeCanvasPalette() {
+      const styles = getComputedStyle(document.documentElement);
+      return {
+        grid: styles.getPropertyValue('--canvas-grid').trim() || 'rgba(148,163,184,0.4)',
+        text: styles.getPropertyValue('--canvas-text').trim() || '#64748b',
+        title: styles.getPropertyValue('--canvas-title').trim() || '#0f172a',
+        crosshair: styles.getPropertyValue('--canvas-crosshair').trim() || 'rgba(100,116,139,0.5)',
+        isLight: currentTheme === 'light'
+      };
+    }
+
+    function redrawActiveCanvases() {
+      drawOverviewCurveChart();
+      updateCalculator();
+      renderScenario();
+      runComplianceSimulator();
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. EXACT BASEL III VASICEK ASRF NORMAL & INVERSE NORMAL ENGINE
+    // -----------------------------------------------------------------------
+    function normCDF(x) {
+      if (x <= -10) return 0.0;
+      if (x >= 10) return 1.0;
+      const sign = x < 0 ? -1 : 1;
+      const z = Math.abs(x) / Math.sqrt(2.0);
+      const t = 1.0 / (1.0 + 0.3275911 * z);
+      const erf = 1.0 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-z * z);
+      return 0.5 * (1.0 + sign * erf);
+    }
+
+    function normInv(p) {
+      const prob = Math.min(Math.max(p, 1e-9), 1.0 - 1e-9);
+      const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02, 1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+      const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02, 6.680131188771972e+01, -1.328068155288572e+01];
+      const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00, -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+      const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+      const pLow = 0.02425, pHigh = 1.0 - pLow;
+      let q, r;
+      if (prob < pLow) {
+        q = Math.sqrt(-2.0 * Math.log(prob));
+        return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+               ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1.0);
+      } else if (prob <= pHigh) {
+        q = prob - 0.5; r = q * q;
+        return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+               (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1.0);
+      } else {
+        q = Math.sqrt(-2.0 * Math.log(1.0 - prob));
+        return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+                ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1.0);
+      }
+    }
+
+    const G_999 = normInv(0.999);
+
+    function irbCorporateK(pdRaw, lgd, maturityYears, smeTurnoverOrNull, isDilution) {
+      if (pdRaw <= 0 || lgd <= 0) return { k: 0, rw: 0, r: 0 };
+      const pd = Math.min(Math.max(pdRaw, isDilution ? 0.0001 : 0.0005), 0.9999);
+      const m = Math.min(Math.max(maturityYears, 1.0), 5.0);
+      const exp50 = (1.0 - Math.exp(-50.0 * pd)) / (1.0 - Math.exp(-50.0));
+      let r = 0.12 * exp50 + 0.24 * (1.0 - exp50);
+
+      if (!isDilution && smeTurnoverOrNull !== null && smeTurnoverOrNull < 50.0) {
+        const s = Math.min(Math.max(smeTurnoverOrNull, 5.0), 50.0);
+        r -= 0.04 * (1.0 - (s - 5.0) / 45.0);
+      }
+
+      const b = Math.pow(0.11852 - 0.05478 * Math.log(pd), 2);
+      const matAdj = (1.0 + (m - 2.5) * b) / (1.0 - 1.5 * b);
+      const condPD = normCDF((normInv(pd) + Math.sqrt(r) * G_999) / Math.sqrt(1.0 - r));
+      const k = Math.max(0, (lgd * condPD - pd * lgd) * matAdj);
+      return { k, rw: k * 12.5, r };
+    }
+
+    function irbRetailK(pdRaw, lgd, isQRRE) {
+      if (pdRaw <= 0 || lgd <= 0) return { k: 0, rw: 0, r: 0 };
+      const pd = Math.min(Math.max(pdRaw, 0.0005), 0.9999);
+      const exp35 = (1.0 - Math.exp(-35.0 * pd)) / (1.0 - Math.exp(-35.0));
+      const r = isQRRE ? 0.04 : (0.03 * exp35 + 0.16 * (1.0 - exp35));
+      const condPD = normCDF((normInv(pd) + Math.sqrt(r) * G_999) / Math.sqrt(1.0 - r));
+      const k = Math.max(0, lgd * condPD - pd * lgd);
+      return { k, rw: k * 12.5, r };
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. SAFE INPUT HANDLING & CANVAS DPI SETUP
+    // -----------------------------------------------------------------------
+    function parseSafeNum(rawStr, maxCap = 100000) {
+      const s = String(rawStr === undefined || rawStr === null ? '' : rawStr).trim();
+      if (s === '' || s === '.' || s === '-' || s === '-.') {
+        return { value: 0, isNegative: s.startsWith('-') };
+      }
+      const n = Number(s.replace(/,/g, ''));
+      if (!Number.isFinite(n)) return { value: 0, isNegative: false };
+      if (n < 0) return { value: 0, isNegative: true };
+      return { value: Math.min(n, maxCap), isNegative: false };
+    }
+
+    function handleNumericKeystroke(inputId, warnId, callbackFn) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      const parsed = parseSafeNum(el.value);
+      if (warnId) {
+        const w = document.getElementById(warnId);
+        if (w) w.classList.toggle('hidden', !parsed.isNegative);
+      }
+      if (typeof callbackFn === 'function') callbackFn();
+    }
+
+    function formatNumericOnBlur(inputId, warnId, decimals, callbackFn) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      const parsed = parseSafeNum(el.value);
+      el.value = parsed.value.toFixed(decimals);
+      if (warnId) {
+        const w = document.getElementById(warnId);
+        if (w) w.classList.add('hidden');
+      }
+      if (typeof callbackFn === 'function') callbackFn();
+    }
+
+    function fmtM(v) {
+      const safe = Number.isFinite(v) ? v : 0;
+      return (safe < 0 ? '-' : '') + '$' + Math.abs(safe).toFixed(2) + 'M';
+    }
+
+    function prepareCanvas(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(260, rect.width || 520);
+      const h = Math.max(150, rect.height || 230);
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      return { ctx, w, h };
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. HEADER NAVIGATION & SCROLL CUES
+    // -----------------------------------------------------------------------
+    let activeTab = 'overview';
+
+    function updateNavScrollCues() {
+      const dock = document.getElementById('primary-nav-dock');
+      const leftCue = document.getElementById('nav-cue-left');
+      const rightCue = document.getElementById('nav-cue-right');
+      if (!dock || !leftCue || !rightCue) return;
+      const maxScroll = dock.scrollWidth - dock.clientWidth;
+      const showLeft = dock.scrollLeft > 6;
+      const showRight = maxScroll > 6 && dock.scrollLeft < (maxScroll - 6);
+      leftCue.classList.toggle('opacity-0', !showLeft);
+      leftCue.classList.toggle('pointer-events-none', !showLeft);
+      rightCue.classList.toggle('opacity-0', !showRight);
+      rightCue.classList.toggle('pointer-events-none', !showRight);
+    }
+
+    function scrollNavDock(deltaPx) {
+      const dock = document.getElementById('primary-nav-dock');
+      if (dock) dock.scrollBy({ left: deltaPx, behavior: 'smooth' });
+    }
+
+    function switchMainTab(tabId) {
+      activeTab = tabId;
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById('nav-' + tabId);
+      if (btn) {
+        btn.classList.add('active');
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      }
+
+      requestAnimationFrame(() => {
+        if (tabId === 'overview') drawOverviewCurveChart();
+        if (tabId === 'calculator') updateCalculator();
+        if (tabId === 'matrix') renderRulesMatrix();
+        if (tabId === 'scenarios') renderScenario();
+        if (tabId === 'simulator') runComplianceSimulator();
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. MODULE 1: OVERVIEW PILLARS & HOVER-CROSSHAIR CURVE CANVAS
+    // -----------------------------------------------------------------------
+    const OVERVIEW_PILLARS = [
+      {
+        badge: 'Pillar 1 • CRE34.2 – CRE34.7 & Fn 156',
+        title: 'Default Risk: Top-Down vs. Bottom-Up Mechanics',
+        points: [
+          'Retail pools (CRE34.3) and eligible homogeneous corporate pools (CRE34.4) must estimate PD, LGD, or 1-year EL on a stand-alone basis without seller recourse.',
+          'Under F-IRB top-down (CRE34.5(1)), exclusively senior corporate claims use LGD = 40% and PD = EL / 0.40. Non-senior claims use LGD = 100% and PD = EL.',
+          'Under A-IRB (CRE34.6), banks infer PD or LGD from long-run loss rates, but must lock undrawn revolving purchase commitments at a mandatory 40% CCF.',
+          'Unseparated hybrid pools (CRE34.2) take the highest-capital risk-weight function in the pool. SME size relief (Footnote 156) requires obligor-weighted turnover.'
+        ],
+        example: 'Numeric Example: A $100M senior corporate pool with stand-alone EL = 0.60% sets LGD = 40% and PD = 1.50%, yielding a 65.17% RW at M = 1.0y ($65.17M RWA). Adding one subordinated claim flips LGD to 100% (PD = 0.60%) and raises RW to 109.76% ($109.76M RWA).'
+      },
+      {
+        badge: 'Pillar 2 • CRE34.8 – CRE34.9 & Fn 157',
+        title: 'Dilution Risk Mechanics & 1-Year Maturity Treatment',
+        points: [
+          'Dilution covers non-cash invoice reductions from product returns, quality disputes, borrower offsets, and early-payment promotional discounts (Footnote 157).',
+          'Unless the bank proves to its supervisor that dilution is immaterial, it must estimate 1-year stand-alone EL_Dilution as a percentage of Gross Receivables.',
+          'Universal Formula (CRE34.8 & 34.9): Always plug PD = EL_Dilution and LGD = 100% into the Corporate risk-weight function—even for retail receivables pools.',
+          'If the bank proves dilution is monitored and resolved within 1 year, the supervisor may permit M_Dilution = 1.0 year.'
+        ],
+        example: 'Numeric Example: On a $120M gross retail e-commerce pool with 0.40% annual return credits and M = 1.0y, Corporate IRB (PD = 0.40%, LGD = 100%) sets Dilution RW = 51.73% ($62.08M RWA) and K_Dilution = $4.97M.'
+      },
+      {
+        badge: 'Pillar 3 • CRE34.10 – CRE34.11',
+        title: 'Purchase Price Discounts (PPD) & Securitisation Link',
+        points: [
+          'Non-Refundable PPD (CRE34.10): A fixed discount that is never refunded to the seller has zero effect on RWA and zero effect on CRE35 EL-provision calculations.',
+          'Refundable PPD (CRE34.10): A discount refundable to the seller based on pool performance acts as first-loss protection under the securitisation chapters CRE40–CRE45 (including CRE45 for NPL securitisations).',
+          'First-Loss Collateral / Partial Guarantees (CRE34.11): First-loss mitigants covering default, dilution, or both also follow CRE40–CRE45 (with exposure-weighted LGD under SEC-IRBA per CRE44.21).'
+        ],
+        example: 'Numeric Example: Buying $100M of invoices for $94M non-refundable cash leaves RWA unchanged on the full exposure. Structuring the $6M discount as a refundable seller reserve lets the buyer apply SEC-IRBA tranche rules under CRE40–CRE45.'
+      },
+      {
+        badge: 'Pillar 4 • CRE34.12 & Footnote 158',
+        title: 'Credit Risk Mitigants & Guarantee Substitution',
+        points: [
+          'Dual-Risk Guarantee (CRE34.12(1)): When an eligible guarantor covers both default and dilution risk, substitute the guarantor’s RW in place of the pool’s combined default + dilution RW.',
+          'Single-Risk Guarantee (CRE34.12(2)): When a guarantee covers only default OR only dilution, substitute the guarantor’s RW for that single risk component and add the uncovered component.',
+          'Partial Coverage (CRE34.12(3)): Apply proportional or tranched CRM rules to covered vs. uncovered shares.',
+          'Footnote 158 Discretion: National supervisors may allow F-IRB recognition of internally rated guarantors below A- specifically for dilution risk.'
+        ],
+        example: 'Numeric Example: An AA trade credit insurer (20% RW) wraps 100% of default and dilution on a $120M pool (unmitigated RWA = $137.05M). Substitution lowers combined RWA to $120M × 20% = $24.00M.'
+      }
+    ];
+
+    function selectOverviewCard(idx) {
+      document.querySelectorAll('.ov-card').forEach(btn => {
+        if (parseInt(btn.dataset.ovcard, 10) === idx) {
+          btn.className = 'ov-card text-left quant-card rounded-2xl p-4 transition ring-2 ring-sky-500';
+        } else {
+          btn.className = 'ov-card text-left quant-card rounded-2xl p-4 transition hover:border-sky-400';
+        }
+      });
+      const p = OVERVIEW_PILLARS[idx];
+      const listHtml = p.points.map(pt => `<li class="flex items-start gap-2"><span class="t-cyan font-bold">▸</span><span>${pt}</span></li>`).join('');
+      document.getElementById('ov-card-spotlight').innerHTML = `
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-0.5 rounded badge-cyan text-xs font-mono font-bold">${p.badge}</span>
+              <h3 class="text-base font-extrabold t-primary">${p.title}</h3>
+            </div>
+            <button type="button" onclick="switchMainTab('matrix')" class="text-xs font-bold t-cyan hover:underline">
+              Explore Clause Matrix →
+            </button>
+          </div>
+          <ul class="space-y-1.5 text-xs sm:text-sm t-secondary leading-relaxed">${listHtml}</ul>
+          <div class="p-3.5 rounded-xl quant-subcard text-xs t-primary leading-relaxed">
+            <strong class="t-cyan">Worked Example:</strong> ${p.example}
+          </div>
+        </div>
+      `;
+    }
+
+    let curvePlotMeta = null;
+    let curveHoverIdx = null;
+
+    function drawOverviewCurveChart() {
+      const canvas = document.getElementById('overviewCurveCanvas');
+      if (!canvas) return;
+      const { ctx, w, h } = prepareCanvas(canvas);
+      const pal = getThemeCanvasPalette();
+
+      const elPoints = [0.0005];
+      for (let i = 1; i <= 45; i++) elPoints.push(i * 0.001); // 0.10% to 4.50%
+
+      const series = [];
+      if (document.getElementById('curve-dil').checked) {
+        series.push({
+          name: 'Dilution RW (LGD 100%, 1y)',
+          color: pal.isLight ? '#d97706' : '#fbbf24',
+          vals: elPoints.map(el => irbCorporateK(el, 1.00, 1.0, null, true).rw * 100)
+        });
+      }
+      if (document.getElementById('curve-nonsen').checked) {
+        series.push({
+          name: 'Corp Non-Senior (LGD 100%, 2.5y)',
+          color: pal.isLight ? '#4f46e5' : '#818cf8',
+          vals: elPoints.map(el => irbCorporateK(el, 1.00, 2.5, null, false).rw * 100)
+        });
+      }
+      if (document.getElementById('curve-sen').checked) {
+        series.push({
+          name: 'Corp Senior (LGD 40%, 2.5y)',
+          color: pal.isLight ? '#0284c7' : '#38bdf8',
+          vals: elPoints.map(el => irbCorporateK(el / 0.40, 0.40, 2.5, null, false).rw * 100)
+        });
+      }
+      if (document.getElementById('curve-sme').checked) {
+        series.push({
+          name: 'Corp SME €15M (Fn 156, LGD 40%)',
+          color: pal.isLight ? '#0d9488' : '#2dd4bf',
+          vals: elPoints.map(el => irbCorporateK(el / 0.40, 0.40, 2.5, 15.0, false).rw * 100)
+        });
+      }
+      if (document.getElementById('curve-oth').checked) {
+        series.push({
+          name: 'Other Retail (LGD 40%)',
+          color: pal.isLight ? '#059669' : '#34d399',
+          vals: elPoints.map(el => irbRetailK(el / 0.40, 0.40, false).rw * 100)
+        });
+      }
+      if (document.getElementById('curve-qrre').checked) {
+        series.push({
+          name: 'QRRE Retail (LGD 40%)',
+          color: pal.isLight ? '#e11d48' : '#fb7185',
+          vals: elPoints.map(el => irbRetailK(el / 0.40, 0.40, true).rw * 100)
+        });
+      }
+
+      const pad = { left: 54, right: 20, top: 18, bottom: 36 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      let maxY = 150;
+      series.forEach(s => s.vals.forEach(v => { if (v > maxY) maxY = v; }));
+      maxY = Math.ceil(maxY / 50) * 50;
+
+      ctx.strokeStyle = pal.grid;
+      ctx.lineWidth = 1;
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.fillStyle = pal.text;
+
+      for (let g = 0; g <= 5; g++) {
+        const yVal = (maxY / 5) * g;
+        const y = pad.top + ph - (yVal / maxY) * ph;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+        ctx.textAlign = 'right';
+        ctx.fillText(yVal.toFixed(0) + '%', pad.left - 8, y + 4);
+      }
+
+      const xTicks = [0.0005, 0.01, 0.02, 0.03, 0.04, 0.045];
+      xTicks.forEach(xt => {
+        const x = pad.left + ((xt - 0.0005) / (0.045 - 0.0005)) * pw;
+        ctx.textAlign = 'center';
+        ctx.fillText((xt * 100).toFixed(2) + '%', x, pad.top + ph + 18);
+      });
+
+      ctx.fillStyle = pal.text;
+      ctx.textAlign = 'right';
+      ctx.fillText('Stand-Alone 1-Year Pool Expected Loss (EL %)', pad.left + pw, pad.top + ph + 32);
+
+      series.forEach(s => {
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = 2.3;
+        ctx.beginPath();
+        s.vals.forEach((v, idx) => {
+          const el = elPoints[idx];
+          const x = pad.left + ((el - 0.0005) / (0.045 - 0.0005)) * pw;
+          const y = pad.top + ph - (v / maxY) * ph;
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      });
+
+      // Draw Interactive Hover Crosshair & Points
+      if (curveHoverIdx !== null && curveHoverIdx >= 0 && curveHoverIdx < elPoints.length && series.length > 0) {
+        const el = elPoints[curveHoverIdx];
+        const cx = pad.left + ((el - 0.0005) / (0.045 - 0.0005)) * pw;
+        ctx.save();
+        ctx.strokeStyle = pal.crosshair;
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(cx, pad.top);
+        ctx.lineTo(cx, pad.top + ph);
+        ctx.stroke();
+        ctx.restore();
+
+        series.forEach(s => {
+          const cy = pad.top + ph - (s.vals[curveHoverIdx] / maxY) * ph;
+          ctx.fillStyle = s.color;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      curvePlotMeta = { pad, pw, ph, elPoints, series, maxY };
+    }
+
+    function setupOverviewCanvasHover() {
+      const canvas = document.getElementById('overviewCurveCanvas');
+      const tip = document.getElementById('overviewCurveTooltip');
+      if (!canvas || !tip) return;
+
+      canvas.addEventListener('mousemove', e => {
+        if (!curvePlotMeta || curvePlotMeta.series.length === 0) return;
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const { pad, pw, elPoints, series } = curvePlotMeta;
+        if (mx < pad.left || mx > pad.left + pw) {
+          curveHoverIdx = null;
+          tip.classList.add('hidden');
+          drawOverviewCurveChart();
+          return;
+        }
+        const ratio = (mx - pad.left) / pw;
+        const targetEL = 0.0005 + ratio * (0.045 - 0.0005);
+        let bestIdx = 0, bestDiff = Infinity;
+        elPoints.forEach((el, idx) => {
+          const d = Math.abs(el - targetEL);
+          if (d < bestDiff) { bestDiff = d; bestIdx = idx; }
+        });
+
+        curveHoverIdx = bestIdx;
+        drawOverviewCurveChart();
+
+        const elPct = (elPoints[bestIdx] * 100).toFixed(2);
+        let html = `<div class="font-extrabold t-primary border-b t-border pb-1 mb-1">Pool EL: ${elPct}%</div>`;
+        series.forEach(s => {
+          html += `<div class="flex items-center justify-between gap-3"><span style="color:${s.color};font-weight:600;">${s.name.split('(')[0]}</span><span class="font-bold t-primary">${s.vals[bestIdx].toFixed(1)}%</span></div>`;
+        });
+        tip.innerHTML = html;
+        tip.classList.remove('hidden');
+        const leftPos = Math.min(rect.width - 235, Math.max(8, mx + 14));
+        tip.style.left = leftPos + 'px';
+        tip.style.top = '12px';
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        curveHoverIdx = null;
+        tip.classList.add('hidden');
+        drawOverviewCurveChart();
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. MODULE 2: VASICEK DUAL-RISK RWA & K_DILUTION CALCULATOR
+    // -----------------------------------------------------------------------
+    function handleCalcModeChange() {
+      const mode = document.getElementById('calc-mode').value;
+      const airbMethod = document.getElementById('calc-airb-method').value;
+
+      document.getElementById('box-seniority').classList.toggle('hidden', !(mode === 'FIRB_UNDEC' || mode === 'HYBRID'));
+      document.getElementById('box-airb-infer').classList.toggle('hidden', mode !== 'AIRB');
+
+      let showEL = false, showPD = false, showLGD = false;
+      if (mode === 'FIRB_UNDEC') {
+        showEL = true;
+      } else if (mode === 'FIRB_PD') {
+        showPD = true; showLGD = true;
+      } else if (mode === 'AIRB') {
+        if (airbMethod === 'INFER_PD') { showEL = true; showLGD = true; }
+        else { showEL = true; showPD = true; }
+      } else {
+        showPD = true; showLGD = true;
+      }
+
+      document.getElementById('box-el-def').classList.toggle('hidden', !showEL);
+      document.getElementById('box-pd-def').classList.toggle('hidden', !showPD);
+      document.getElementById('box-lgd-def').classList.toggle('hidden', !showLGD);
+
+      const isRetailOnly = (mode === 'RETAIL_OTHER' || mode === 'RETAIL_QRRE');
+      document.getElementById('box-sme').classList.toggle('hidden', isRetailOnly);
+      document.getElementById('box-maturity').classList.toggle('hidden', isRetailOnly);
+
+      updateCalculator();
+    }
+
+    function updateCalculator() {
+      const mode = document.getElementById('calc-mode').value;
+      const drawn = parseSafeNum(document.getElementById('calc-drawn').value).value;
+      const undrawn = parseSafeNum(document.getElementById('calc-undrawn').value).value;
+      const undrawnEAD = 0.40 * undrawn;
+      const grossEAD = drawn + undrawnEAD;
+
+      // SME Footnote 156
+      const smeAvail = document.getElementById('calc-sme-avail').checked;
+      document.getElementById('box-sme-size').classList.toggle('hidden', !smeAvail);
+      const smeTurn = smeAvail ? parseSafeNum(document.getElementById('calc-sme-turn').value, 500).value : null;
+
+      // Maturity & CRE34.7 Trigger
+      const mDrawnRaw = parseSafeNum(document.getElementById('calc-m-drawn').value, 10).value || 1.0;
+      const mInv = parseSafeNum(document.getElementById('calc-m-inv').value, 10).value;
+      const mFac = parseSafeNum(document.getElementById('calc-m-fac').value, 10).value;
+      const covActive = document.getElementById('calc-cov-active').checked;
+      const mDrawn = Math.min(Math.max(mDrawnRaw, 1.0), 5.0);
+      const mUndrawn = covActive ? mDrawn : Math.min(Math.max(mInv + mFac, 1.0), 5.0);
+      document.getElementById('calc-mat-pill').textContent = `Drawn ${mDrawn.toFixed(1)}y | Undrawn ${mUndrawn.toFixed(1)}y`;
+
+      // Dilution Risk
+      const dilImmaterial = (document.getElementById('calc-dil-materiality').value === 'IMMATERIAL');
+      document.getElementById('box-dil-inputs').classList.toggle('hidden', dilImmaterial);
+      const elDil = dilImmaterial ? 0 : (parseSafeNum(document.getElementById('calc-el-dil').value, 99).value / 100.0);
+      const dil1y = document.getElementById('calc-dil-1y').checked;
+      const mDil = dil1y ? 1.0 : mDrawn;
+      document.getElementById('calc-dil-pill').textContent = dilImmaterial ? 'Immaterial ($0)' : `LGD 100% | M=${mDil.toFixed(1)}y`;
+
+      const dilRes = dilImmaterial ? { k: 0, rw: 0 } : irbCorporateK(elDil, 1.00, mDil, null, true);
+      const kDilution = grossEAD * dilRes.k;
+      const rwaDilPre = grossEAD * dilRes.rw;
+
+      // Net Default EAD = Gross - K_Dilution
+      const netDefaultEAD = Math.max(0, grossEAD - kDilution);
+      const drawnShare = grossEAD > 0 ? (drawn / grossEAD) : 1.0;
+      const undrawnShare = grossEAD > 0 ? (undrawnEAD / grossEAD) : 0.0;
+      const netDrawnEAD = netDefaultEAD * drawnShare;
+      const netUndrawnEAD = netDefaultEAD * undrawnShare;
+
+      // Default Risk Evaluation
+      const seniority = document.getElementById('calc-seniority').value;
+      const airbMethod = document.getElementById('calc-airb-method').value;
+      const elDefIn = parseSafeNum(document.getElementById('calc-el-def').value, 99).value / 100.0;
+      const pdDefIn = parseSafeNum(document.getElementById('calc-pd-def').value, 99).value / 100.0;
+      const lgdDefIn = Math.min(1.0, parseSafeNum(document.getElementById('calc-lgd-def').value, 100).value / 100.0);
+
+      let pdDef = 0.015, lgdDef = 0.40, elDefRate = 0.006, defDrawnRW = 0, defUndrawnRW = 0, clause = '', hybridNote = '';
+
+      if (mode === 'FIRB_UNDEC') {
+        clause = 'CRE34.5(1) + CRE34.8';
+        elDefRate = elDefIn;
+        if (seniority === 'SENIOR') { lgdDef = 0.40; pdDef = Math.min(0.9999, elDefRate / 0.40); }
+        else { lgdDef = 1.00; pdDef = Math.min(0.9999, elDefRate); }
+        defDrawnRW = irbCorporateK(pdDef, lgdDef, mDrawn, smeTurn, false).rw;
+        defUndrawnRW = irbCorporateK(pdDef, lgdDef, mUndrawn, smeTurn, false).rw;
+      } else if (mode === 'FIRB_PD') {
+        clause = 'CRE34.5(2) + CRE34.8';
+        pdDef = pdDefIn; lgdDef = lgdDefIn; elDefRate = pdDef * lgdDef;
+        defDrawnRW = irbCorporateK(pdDef, lgdDef, mDrawn, smeTurn, false).rw;
+        defUndrawnRW = irbCorporateK(pdDef, lgdDef, mUndrawn, smeTurn, false).rw;
+      } else if (mode === 'AIRB') {
+        clause = 'CRE34.6 – 34.7 + CRE34.8';
+        elDefRate = elDefIn;
+        if (airbMethod === 'INFER_PD') {
+          lgdDef = Math.max(0.05, lgdDefIn);
+          pdDef = Math.min(0.9999, elDefRate / lgdDef);
+        } else {
+          pdDef = Math.max(0.0005, pdDefIn);
+          lgdDef = Math.min(1.0, elDefRate / pdDef);
+        }
+        defDrawnRW = irbCorporateK(pdDef, lgdDef, mDrawn, smeTurn, false).rw;
+        defUndrawnRW = irbCorporateK(pdDef, lgdDef, mUndrawn, smeTurn, false).rw;
+      } else if (mode === 'RETAIL_OTHER') {
+        clause = 'CRE34.3 (Other Retail) + CRE34.9';
+        pdDef = pdDefIn; lgdDef = lgdDefIn; elDefRate = pdDef * lgdDef;
+        defDrawnRW = irbRetailK(pdDef, lgdDef, false).rw;
+        defUndrawnRW = defDrawnRW;
+      } else if (mode === 'RETAIL_QRRE') {
+        clause = 'CRE34.2–34.3 (QRRE) + CRE34.9';
+        pdDef = pdDefIn; lgdDef = lgdDefIn; elDefRate = pdDef * lgdDef;
+        defDrawnRW = irbRetailK(pdDef, lgdDef, true).rw;
+        defUndrawnRW = defDrawnRW;
+      } else if (mode === 'HYBRID') {
+        clause = 'CRE34.2 (Hybrid Highest-Capital Rule)';
+        pdDef = pdDefIn;
+        lgdDef = (seniority === 'NONSENIOR') ? 1.00 : lgdDefIn;
+        elDefRate = pdDef * lgdDef;
+        const cD = irbCorporateK(pdDef, lgdDef, mDrawn, smeTurn, false).rw;
+        const cU = irbCorporateK(pdDef, lgdDef, mUndrawn, smeTurn, false).rw;
+        const rO = irbRetailK(pdDef, lgdDef, false).rw;
+        const rQ = irbRetailK(pdDef, lgdDef, true).rw;
+        defDrawnRW = Math.max(cD, rO, rQ);
+        defUndrawnRW = Math.max(cU, rO, rQ);
+        hybridNote = (defDrawnRW === cD) ? ' • Corp RW Forced' : ' • Retail RW Forced';
+      }
+
+      document.getElementById('calc-pd-lgd-pill').textContent = `PD ${(pdDef * 100).toFixed(2)}% | LGD ${(lgdDef * 100).toFixed(0)}%${hybridNote}`;
+
+      const rwaDefPre = netDrawnEAD * defDrawnRW + netUndrawnEAD * defUndrawnRW;
+      const avgDefRWPre = netDefaultEAD > 0 ? (rwaDefPre / netDefaultEAD) : 0;
+
+      // PPD Selector & Alerts (CRE34.10)
+      const ppdType = document.getElementById('calc-ppd-type').value;
+      document.getElementById('box-ppd-amt').classList.toggle('hidden', ppdType === 'NONE');
+      const ppdAmt = parseSafeNum(document.getElementById('calc-ppd-amt').value).value;
+
+      document.getElementById('banner-nonref-ppd').classList.toggle('hidden', !(ppdType === 'NON_REF' && ppdAmt > 0));
+      document.getElementById('lbl-nonref-amt').textContent = fmtM(ppdAmt);
+      document.getElementById('banner-ref-ppd').classList.toggle('hidden', !(ppdType === 'REF' && ppdAmt > 0));
+      document.getElementById('lbl-ref-amt').textContent = fmtM(ppdAmt);
+
+      // Guarantee Substitution (CRE34.12)
+      const crmScope = document.getElementById('calc-crm-scope').value;
+      document.getElementById('box-crm-params').classList.toggle('hidden', crmScope === 'NONE');
+      const crmPctVal = parseFloat(document.getElementById('calc-crm-slider').value) || 0;
+      document.getElementById('lbl-crm-cov').textContent = `${crmPctVal.toFixed(0)}%`;
+      const crmPct = crmPctVal / 100.0;
+      const crmRW = parseSafeNum(document.getElementById('calc-crm-rw').value, 1250).value / 100.0;
+
+      let rwaDefPost = rwaDefPre;
+      let rwaDilPost = rwaDilPre;
+      if (crmScope === 'BOTH') {
+        const subTotal = grossEAD * crmPct * crmRW;
+        const preSum = Math.max(1e-6, rwaDefPre + rwaDilPre);
+        rwaDefPost = (1.0 - crmPct) * rwaDefPre + subTotal * (rwaDefPre / preSum);
+        rwaDilPost = (1.0 - crmPct) * rwaDilPre + subTotal * (rwaDilPre / preSum);
+      } else if (crmScope === 'DEFAULT_ONLY') {
+        rwaDefPost = (1.0 - crmPct) * rwaDefPre + (netDefaultEAD * crmPct * crmRW);
+      } else if (crmScope === 'DILUTION_ONLY') {
+        rwaDilPost = (1.0 - crmPct) * rwaDilPre + (grossEAD * crmPct * crmRW);
+      }
+
+      const totalRWAPost = rwaDefPost + rwaDilPost;
+      const ulCap = 0.08 * totalRWAPost;
+      const poolEL = netDefaultEAD * elDefRate + grossEAD * elDil;
+
+      // Update KPI Strip
+      document.getElementById('kpi-gross-ead').textContent = fmtM(grossEAD);
+      document.getElementById('kpi-gross-sub').textContent = `${fmtM(drawn)} + 40%×${fmtM(undrawn)}`;
+      document.getElementById('kpi-kdil').textContent = fmtM(kDilution);
+      document.getElementById('kpi-dil-rwa').textContent = `Dil RWA: ${fmtM(rwaDilPost)}`;
+      document.getElementById('kpi-net-ead').textContent = fmtM(netDefaultEAD);
+      document.getElementById('kpi-def-rwa').textContent = fmtM(rwaDefPost);
+      document.getElementById('kpi-def-rw').textContent = `Pre-CRM RW: ${(avgDefRWPre * 100).toFixed(2)}%`;
+      document.getElementById('kpi-tot-rwa').textContent = fmtM(totalRWAPost);
+      document.getElementById('kpi-tot-density').textContent = grossEAD > 0 ? `${((totalRWAPost / grossEAD) * 100).toFixed(1)}% of Gross` : '0.0% of Gross';
+      document.getElementById('kpi-ul-cap').textContent = fmtM(ulCap);
+      document.getElementById('kpi-el-sub').textContent = `Pool EL: ${fmtM(poolEL)}`;
+      document.getElementById('calc-active-clause').textContent = clause;
+
+      const crmDelta = (rwaDefPre + rwaDilPre) - totalRWAPost;
+      document.getElementById('calc-audit-steps').innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl quant-subcard gap-1">
+          <span class="t-secondary"><strong>1. Gross Receivable Exposure:</strong> Drawn plus fixed 40% CCF on undrawn line.</span>
+          <span class="mono-num font-bold t-primary">${fmtM(drawn)} + ${fmtM(undrawnEAD)} = ${fmtM(grossEAD)}</span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl quant-subcard gap-1">
+          <span class="t-secondary"><strong>2. Stand-Alone Dilution Charge:</strong> Corp RW (${(dilRes.rw * 100).toFixed(2)}%) on Gross Pool.</span>
+          <span class="mono-num font-bold t-amber">K_Dil = ${fmtM(kDilution)} | RWA = ${fmtM(rwaDilPre)}</span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl quant-subcard gap-1">
+          <span class="t-secondary"><strong>3. Net Default EAD:</strong> Deduct pre-mitigation K_Dilution from Gross Pool.</span>
+          <span class="mono-num font-bold t-cyan">${fmtM(grossEAD)} − ${fmtM(kDilution)} = ${fmtM(netDefaultEAD)}</span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl quant-subcard gap-1">
+          <span class="t-secondary"><strong>4. Stand-Alone Default RWA:</strong> Drawn RW ${(defDrawnRW * 100).toFixed(1)}% | Undrawn RW ${(defUndrawnRW * 100).toFixed(1)}%.</span>
+          <span class="mono-num font-bold t-indigo">${fmtM(rwaDefPre)}</span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl quant-subcard gap-1">
+          <span class="t-secondary"><strong>5. Post-CRM Combined RWA:</strong> Guarantee substitution impact ${crmDelta >= 0 ? '−' + fmtM(crmDelta) : '+' + fmtM(Math.abs(crmDelta))}.</span>
+          <span class="mono-num font-bold t-emerald">${fmtM(totalRWAPost)} (8% Cap: ${fmtM(ulCap)})</span>
+        </div>
+      `;
+
+      drawCalcStackedChart(grossEAD, kDilution, netDefaultEAD, rwaDefPre, rwaDilPre, rwaDefPost, rwaDilPost);
+    }
+
+    function drawCalcStackedChart(grossEAD, kDil, netEAD, rwaDefPre, rwaDilPre, rwaDefPost, rwaDilPost) {
+      const canvas = document.getElementById('calcWaterfallCanvas');
+      if (!canvas) return;
+      const { ctx, w, h } = prepareCanvas(canvas);
+      const pal = getThemeCanvasPalette();
+
+      const preTotal = rwaDefPre + rwaDilPre;
+      const postTotal = rwaDefPost + rwaDilPost;
+      const maxVal = Math.max(15, grossEAD, preTotal, postTotal) * 1.18;
+
+      const pad = { left: 52, right: 18, top: 26, bottom: 38 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      ctx.strokeStyle = pal.grid;
+      ctx.lineWidth = 1;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.fillStyle = pal.text;
+
+      for (let i = 0; i <= 4; i++) {
+        const v = (maxVal / 4) * i;
+        const y = pad.top + ph - (v / maxVal) * ph;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+        ctx.textAlign = 'right';
+        ctx.fillText('$' + v.toFixed(0) + 'M', pad.left - 6, y + 3);
+      }
+
+      const cols = [
+        { label: 'Gross Pool', single: grossEAD, color: pal.isLight ? '#64748b' : '#94a3b8' },
+        { label: 'K_Dilution', single: kDil, color: '#f59e0b' },
+        { label: 'Net Def EAD', single: netEAD, color: '#0ea5e9' },
+        { label: 'Pre-CRM RWA', stack: [rwaDefPre, rwaDilPre] },
+        { label: 'Post-CRM RWA', stack: [rwaDefPost, rwaDilPost] }
+      ];
+
+      const colW = pw / cols.length;
+      const barW = Math.min(56, colW * 0.56);
+      const defColor = pal.isLight ? '#4f46e5' : '#818cf8';
+      const dilColor = pal.isLight ? '#d97706' : '#fbbf24';
+
+      cols.forEach((c, idx) => {
+        const x = pad.left + colW * idx + (colW - barW) / 2;
+        if (c.stack) {
+          const hDef = (c.stack[0] / maxVal) * ph;
+          const hDil = (c.stack[1] / maxVal) * ph;
+          const yDef = pad.top + ph - hDef;
+          const yDil = yDef - hDil;
+
+          ctx.fillStyle = defColor;
+          ctx.beginPath();
+          ctx.roundRect(x, yDef, barW, Math.max(1, hDef), [0, 0, 0, 0]);
+          ctx.fill();
+
+          ctx.fillStyle = dilColor;
+          ctx.beginPath();
+          ctx.roundRect(x, yDil, barW, Math.max(1, hDil), [6, 6, 0, 0]);
+          ctx.fill();
+
+          const tot = c.stack[0] + c.stack[1];
+          ctx.fillStyle = pal.title;
+          ctx.font = 'bold 10px JetBrains Mono, monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('$' + tot.toFixed(1) + 'M', x + barW / 2, yDil - 6);
+        } else {
+          const bh = (c.single / maxVal) * ph;
+          const y = pad.top + ph - bh;
+          ctx.fillStyle = c.color;
+          ctx.beginPath();
+          ctx.roundRect(x, y, barW, Math.max(2, bh), [6, 6, 0, 0]);
+          ctx.fill();
+
+          ctx.fillStyle = pal.title;
+          ctx.font = 'bold 10px JetBrains Mono, monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('$' + c.single.toFixed(1) + 'M', x + barW / 2, y - 6);
+        }
+
+        ctx.fillStyle = pal.text;
+        ctx.font = '600 10px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(c.label, x + barW / 2, pad.top + ph + 16);
+      });
+
+      // Legend for stacked RWA columns
+      ctx.font = '600 10px Inter, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = defColor;
+      ctx.fillRect(pad.left, pad.top + ph + 24, 9, 9);
+      ctx.fillStyle = pal.text;
+      ctx.fillText('Default RWA', pad.left + 13, pad.top + ph + 32);
+
+      ctx.fillStyle = dilColor;
+      ctx.fillRect(pad.left + 96, pad.top + ph + 24, 9, 9);
+      ctx.fillStyle = pal.text;
+      ctx.fillText('Dilution RWA', pad.left + 109, pad.top + ph + 32);
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. MODULE 3: CLAUSE-BY-CLAUSE MATRIX & AUDIT TRAP LENS
+    // -----------------------------------------------------------------------
+    const RULES_MATRIX = [
+      {
+        clause: 'CRE34.1', domain: 'DEFAULT', domainLabel: 'Dual-Charge Scope', trap: false,
+        spec: 'Purchased receivables incur separate IRB unexpected loss capital charges for default risk and dilution risk.',
+        formula: 'Total RWA = RWA_Default + RWA_Dilution',
+        example: 'A bank purchasing $100M of trade invoices calculates capital for buyer insolvency and buyer return credits.'
+      },
+      {
+        clause: 'CRE34.2', domain: 'DEFAULT', domainLabel: 'Asset Class & Hybrid Rule', trap: true,
+        trapNote: 'Audit Trap: Unseparated hybrid pools must apply the single highest-capital risk-weight function across 100% of the pool.',
+        spec: 'Single-class pools use that class’s IRB function if qualified (QRRE falls back to Other Retail if CRE30.24 fails). Unseparated mixed pools take the highest-capital risk-weight function.',
+        formula: 'RW_Hybrid = max(RW_Types_In_Pool)',
+        example: 'Mixing corporate invoices into an unseparated consumer card pool forces Corporate RW across the entire pool.'
+      },
+      {
+        clause: 'CRE34.3', domain: 'DEFAULT', domainLabel: 'Retail Stand-Alone Rule', trap: true,
+        trapNote: 'Audit Trap: Netting seller buybacks or guarantees into retail PD or LGD violates CRE34.3.',
+        spec: 'Banks may use external and internal reference data for retail pools, but must estimate PD and LGD (or EL) on a stand-alone basis without seller recourse.',
+        formula: 'PD, LGD = Stand-Alone Obligor Risk',
+        example: 'Seller buybacks cut historical losses from 1.50% to 0.15%; the bank must still model 1.50% stand-alone loss.'
+      },
+      {
+        clause: 'CRE34.4', domain: 'DEFAULT', domainLabel: 'Corporate Top-Down EL', trap: true,
+        trapNote: 'Audit Trap: Top-down corporate treatment requires supervisory permission and bars A-IRB receivables if the bank uses F-IRB for corporate loans.',
+        spec: 'With supervisory permission, banks estimate the corporate pool’s 1-year stand-alone EL (% of EAD) without recourse and apply the corporate RW function.',
+        formula: 'EL_1yr = Stand-Alone Default Loss / EAD',
+        example: 'A Corporate F-IRB bank cannot use A-IRB LGD inference on purchased corporate receivables.'
+      },
+      {
+        clause: 'Footnote 156', domain: 'DEFAULT', domainLabel: 'SME Firm-Size Relief', trap: true,
+        trapNote: 'Audit Trap: Claiming SME correlation relief without individual exposure-weighted turnover data is disallowed.',
+        spec: 'The CRE31.8 SME firm-size adjustment equals the exposure-weighted average across individual pool obligors. If turnover data is missing, zero relief applies.',
+        formula: 'ΔR = −0.04 × [1 − (min(max(S,5),50) − 5)/45]',
+        example: 'Verified €15M weighted turnover lowers correlation R by 3.1 percentage points; missing turnover data gives 0% relief.'
+      },
+      {
+        clause: 'CRE34.5(1)', domain: 'DEFAULT', domainLabel: 'F-IRB Undecomposed EL', trap: true,
+        trapNote: 'Audit Trap: Failing to prove 100% senior corporate claims flips LGD from 40% to 100%.',
+        spec: 'If unable to decompose EL reliably: exclusively senior corporate claims use LGD = 40% and PD = EL / 0.40; otherwise LGD = 100% and PD = EL. Revolving lines use 40% CCF.',
+        formula: 'EAD = Drawn + 0.40×Undrawn − K_Dilution',
+        example: 'At 0.60% EL, senior claims take PD = 1.50%, LGD = 40%; commingled junior claims take PD = 0.60%, LGD = 100%.'
+      },
+      {
+        clause: 'CRE34.5(2)', domain: 'DEFAULT', domainLabel: 'F-IRB Decomposed PD', trap: false,
+        spec: 'When F-IRB banks estimate PD reliably, they apply standard Corporate F-IRB rules for LGD, maturity M, and guarantees under CRE32.',
+        formula: 'RW = Corporate_FIRB(PD, LGD_FIRB, M)',
+        example: 'Bank estimates reliable pool PD = 1.20% and applies standard 40% senior unsecured F-IRB LGD.'
+      },
+      {
+        clause: 'CRE34.6', domain: 'DEFAULT', domainLabel: 'A-IRB & Mandatory 40% CCF', trap: true,
+        trapNote: 'Audit Trap: A-IRB banks cannot use internal CCF/EAD models for undrawn revolving purchase commitments; 40% CCF is mandatory.',
+        spec: 'A-IRB banks infer PD from long-run LGD or LGD from PD (floored at long-run default-weighted LGD per CRE36.83). Undrawn commitments must take a 40% CCF.',
+        formula: 'LGD ≥ LGD_LongRun; CCF_Undrawn = 40%',
+        example: 'An A-IRB bank’s 15% internal CCF model is rejected; audit locks undrawn commitments at 40% CCF.'
+      },
+      {
+        clause: 'CRE34.7', domain: 'DEFAULT', domainLabel: 'Undrawn Protection Trigger M', trap: true,
+        trapNote: 'Audit Trap: Without early-amortisation or quality covenants, undrawn M jumps to max receivable tenor + remaining facility maturity.',
+        spec: 'Undrawn commitments share drawn pool M only when effective covenants or early-amortisation triggers protect future receivable quality; otherwise M_undrawn = max receivable + facility maturity.',
+        formula: 'M_undrawn (unprotected) = T_max_inv + T_facility',
+        example: '0.5y max invoice tenor plus 3.0y facility maturity spikes unprotected undrawn M from 1.0y to 3.5y.'
+      },
+      {
+        clause: 'CRE34.8 & Fn 157', domain: 'DILUTION', domainLabel: 'Dilution Risk Settings', trap: true,
+        trapNote: 'Audit Trap: Early-payment cash discounts (e.g., 2/10 net 30), returns, and quality disputes all require dilution capital unless proven immaterial.',
+        spec: 'Estimate stand-alone 1-year EL_Dilution and apply the Corporate RW function with PD = EL_Dilution and LGD = 100%. Supervisor may allow M = 1.0y if resolved within 1 year.',
+        formula: 'K_Dilution = Corp_K(PD = EL_Dil, LGD = 100%, M)',
+        example: '0.40% annual credit memos at M = 1.0y produce 51.73% Dilution RW ($4.97M K_Dilution on $120M gross).'
+      },
+      {
+        clause: 'CRE34.9', domain: 'DILUTION', domainLabel: 'Universal Dilution Function', trap: true,
+        trapNote: 'Audit Trap: Retail receivables pools must still use the Corporate risk-weight function (not Retail RW) for dilution risk.',
+        spec: 'The Corporate 100%-LGD dilution treatment applies whether underlying receivables are corporate or retail exposures.',
+        formula: 'Retail Dilution RW = Corporate_RW(EL_Dil, 100%, M)',
+        example: 'Consumer retail card return dilution must be run through the Corporate Vasicek curve at 100% LGD.'
+      },
+      {
+        clause: 'CRE34.10', domain: 'PPD_CRM', domainLabel: 'Purchase Price Discounts', trap: true,
+        trapNote: 'Audit Trap: Non-refundable PPD gives zero RWA or CRE35 EL credit. Refundable PPD triggers CRE40–CRE45 (and CRE45 NPL) securitisation rules.',
+        spec: 'Refundable PPD providing first-loss protection follows securitisation rules CRE40–CRE45 for both buyer and seller. Non-refundable PPD affects neither RWA nor CRE35 provisions.',
+        formula: 'ΔRWA(Non-Ref PPD) = $0; Ref PPD → CRE40–45',
+        example: 'A $6M non-refundable discount yields $0 RWA relief; a $6M refundable holdback is treated as a first-loss tranche.'
+      },
+      {
+        clause: 'CRE34.11', domain: 'PPD_CRM', domainLabel: 'First-Loss Mitigants', trap: true,
+        trapNote: 'Securitisation Link: Shared default + dilution first-loss collateral under SEC-IRBA requires exposure-weighted LGD per CRE44.21.',
+        spec: 'Collateral or partial guarantees providing first-loss protection over default, dilution, or both may be treated under CRE44.10 / CRE44.21 securitisation rules.',
+        formula: 'First-Loss Mitigant → SEC-IRBA (CRE44.21)',
+        example: 'A seller-funded 5% first-loss reserve account covering pool defaults and dilutions follows SEC-IRBA.'
+      },
+      {
+        clause: 'CRE34.12', domain: 'PPD_CRM', domainLabel: 'Guarantee Substitution', trap: false,
+        spec: '(1) Dual-risk guarantee substitutes guarantor RW for total pool RW; (2) Single-risk guarantee substitutes RW for that component and adds the other; (3) Partial coverage uses proportional/tranched CRM.',
+        formula: 'Dual: RW = c·RW_Guar + (1−c)·(RW_Def + RW_Dil)',
+        example: 'An 80% default-only wrap from a 20% RW insurer leaves 20% pool default RWA plus 100% dilution RWA.'
+      },
+      {
+        clause: 'Footnote 158', domain: 'PPD_CRM', domainLabel: 'Sub-A- Dilution Guarantors', trap: true,
+        trapNote: 'Audit Trap: F-IRB recognition of internally rated guarantors below A- for dilution risk requires national supervisory discretion.',
+        spec: 'At national discretion, F-IRB banks may recognise internally rated guarantors with PD equivalent to below A- for dilution capital.',
+        formula: 'Guarantor < A- → Requires National Discretion',
+        example: 'A BBB+ seller dilution guarantee is disallowed under F-IRB unless the national regulator enables Footnote 158.'
+      }
+    ];
+
+    let activeMatrixDom = 'ALL';
+
+    function setMatrixDomain(dom) {
+      activeMatrixDom = dom;
+      document.querySelectorAll('.mdom-btn').forEach(btn => {
+        if (btn.dataset.mdom === dom) {
+          btn.className = 'mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm transition';
+        } else {
+          btn.className = 'mdom-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition';
+        }
+      });
+      renderRulesMatrix();
+    }
+
+    function renderRulesMatrix() {
+      const q = (document.getElementById('matrix-search').value || '').trim().toLowerCase();
+      const trapOn = document.getElementById('trap-lens-toggle').checked;
+      document.getElementById('trap-lens-banner').classList.toggle('hidden', !trapOn);
+
+      const filtered = RULES_MATRIX.filter(r => {
+        if (activeMatrixDom !== 'ALL' && r.domain !== activeMatrixDom) return false;
+        if (!q) return true;
+        return `${r.clause} ${r.domainLabel} ${r.spec} ${r.formula} ${r.example} ${r.trapNote || ''}`.toLowerCase().includes(q);
+      });
+
+      document.getElementById('matrix-count-badge').textContent = `Showing ${filtered.length} of ${RULES_MATRIX.length} entries`;
+      const domStyle = { DEFAULT: 'badge-cyan', DILUTION: 'badge-amber', PPD_CRM: 'badge-indigo' };
+
+      if (filtered.length === 0) {
+        document.getElementById('matrix-tbody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-xs t-muted">No matching clauses found. Clear the search box to view all rules.</td></tr>`;
+        return;
+      }
+
+      document.getElementById('matrix-tbody').innerHTML = filtered.map(r => {
+        const rowCls = (trapOn && r.trap) ? 'trap-highlight' : 'table-row-themed';
+        const pill = r.trap ? `<span class="inline-block mt-1 px-2 py-0.5 rounded badge-amber font-bold text-[10px]">Audit Trap</span>` : '';
+        const note = (trapOn && r.trap && r.trapNote) ? `<div class="mt-2 p-2 rounded-lg badge-amber text-[11px] font-medium leading-snug">${r.trapNote}</div>` : '';
+        return `<tr class="${rowCls} transition-colors">
+          <td class="py-3.5 px-4 font-mono font-bold t-primary">${r.clause}<br/>${pill}</td>
+          <td class="py-3.5 px-3"><span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold ${domStyle[r.domain]}">${r.domainLabel}</span></td>
+          <td class="py-3.5 px-4 t-secondary leading-relaxed">${r.spec}${note}</td>
+          <td class="py-3.5 px-4 mono-num text-[11px] t-cyan font-semibold leading-relaxed">${r.formula}</td>
+          <td class="py-3.5 px-4 t-secondary leading-relaxed">${r.example}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. MODULE 4: 4 REAL-WORLD BANKING SCENARIO WALKTHROUGHS
+    // -----------------------------------------------------------------------
+    function buildScenarios() {
+      // 1) $150M Corporate Supply-Chain Factoring ($110M Drawn + $40M Undrawn -> $126M Gross)
+      const s1Gross = 110 + 0.40 * 40;
+      const s1Dil = irbCorporateK(0.0040, 1.0, 1.0, null, true);
+      const s1KDil = s1Gross * s1Dil.k;
+      const s1Net = s1Gross - s1KDil;
+      const s1DefBase = s1Net * irbCorporateK(0.0060 / 0.40, 0.40, 1.0, null, false).rw;
+      const s1DefStress = s1Net * irbCorporateK(0.0060, 1.00, 1.0, null, false).rw; // Commingled lien -> 100% LGD
+      const s1DilRWA = s1Gross * s1Dil.rw;
+
+      // 2) $90M Hybrid E-Commerce Pool ($60M QRRE + $30M SME €15M vs Unseparated Hybrid Highest-RW)
+      const s2Dil = irbCorporateK(0.0035, 1.0, 1.0, null, true);
+      const s2KDil = 90 * s2Dil.k;
+      const s2Net = 90 - s2KDil;
+      const s2DefBase = (s2Net * (60 / 90)) * irbRetailK(0.018, 0.45, true).rw + (s2Net * (30 / 90)) * irbCorporateK(0.015, 0.40, 1.2, 15.0, false).rw;
+      const s2DefStress = s2Net * irbCorporateK(0.015, 0.40, 1.2, null, false).rw; // Highest RW across 100% + lost SME
+      const s2DilRWA = 90 * s2Dil.rw;
+
+      // 3) $200M A-IRB Auto-Parts Revolving ($140M Drawn + $60M Undrawn -> $164M Gross)
+      const s3Gross = 140 + 0.40 * 60;
+      const s3Dil = irbCorporateK(0.0030, 1.0, 1.0, null, true);
+      const s3KDil = s3Gross * s3Dil.k;
+      const s3Net = s3Gross - s3KDil;
+      const s3DrawnRW = irbCorporateK(0.0045 / 0.30, 0.30, 1.0, null, false).rw;
+      const s3UndrawnStressRW = irbCorporateK(0.0045 / 0.30, 0.30, 4.0, null, false).rw; // 0.5y invoice + 3.5y facility = 4.0y
+      const s3DefBase = s3Net * s3DrawnRW;
+      const s3DefStress = (s3Net * (140 / 164)) * s3DrawnRW + (s3Net * (24 / 164)) * s3UndrawnStressRW;
+      const s3DilRWA = s3Gross * s3Dil.rw;
+
+      // 4) $120M Cross-Border Export Pool with Trade Credit Insurance
+      const s4Gross = 120;
+      const s4Dil = irbCorporateK(0.0065, 1.0, 1.0, null, true);
+      const s4KDil = s4Gross * s4Dil.k;
+      const s4Net = s4Gross - s4KDil;
+      const s4UnmitDef = s4Net * irbCorporateK(0.018, 0.40, 1.4, null, false).rw;
+      const s4UnmitDil = s4Gross * s4Dil.rw;
+      const s4BaseDef = 24.0 * (s4UnmitDef / (s4UnmitDef + s4UnmitDil));
+      const s4BaseDil = 24.0 * (s4UnmitDil / (s4UnmitDef + s4UnmitDil));
+      const s4StressDef = 0.75 * s4Net * 0.20 + 0.25 * s4UnmitDef;
+      const s4StressDil = s4UnmitDil;
+
+      return [
+        {
+          badge: 'Scenario 1 • Corporate Supply-Chain Factoring (CRE34.5(1))',
+          title: '$150M Supply-Chain Factoring Facility',
+          sub: '$110M Drawn + $40M Undrawn (40% CCF = $126M Gross)',
+          desc: 'Contrasts exclusively senior corporate claims (40% LGD) against a commingled subordinated supplier lien defect that forces 100% LGD across the entire pool.',
+          base: {
+            label: 'Base Case: Perfected Senior Claims (40% LGD)',
+            gross: s1Gross, kdil: s1KDil, netEad: s1Net, defRwa: s1DefBase, dilRwa: s1DilRWA, totRwa: s1DefBase + s1DilRWA,
+            text: 'Legal opinions confirm all purchased receivables are senior unsecured corporate obligations. Top-down F-IRB sets LGD = 40% and infers PD = 0.60% / 0.40 = 1.50%, keeping Default RWA at ' + fmtM(s1DefBase) + '.',
+            tags: [['Claim Seniority', 'Exclusively Senior → LGD 40%', 'emerald'], ['Inferred Pool PD', '0.60% / 0.40 = 1.50%', 'cyan'], ['Dilution Charge', '0.40% EL → K_Dil ' + fmtM(s1KDil), 'amber']],
+            preset: { mode: 'FIRB_UNDEC', drawn: 110, undrawn: 40, sen: 'SENIOR', elDef: 0.60, sme: false, cov: true, mDrawn: 1.0, dilMat: 'MATERIAL', elDil: 0.40, dil1y: true, ppdType: 'NONE', crmScope: 'NONE' }
+          },
+          stress: {
+            label: 'Audit Finding: Subordinated / Commingled Lien (100% LGD)',
+            gross: s1Gross, kdil: s1KDil, netEad: s1Net, defRwa: s1DefStress, dilRwa: s1DilRWA, totRwa: s1DefStress + s1DilRWA,
+            text: 'Credit audit uncovers supplier invoices subordinated to inventory lenders. Because the bank cannot demonstrate exclusive seniority under CRE34.5(1), LGD jumps to 100% (PD = 0.60%), spiking Default RWA to ' + fmtM(s1DefStress) + '.',
+            tags: [['Seniority Failure', 'Commingled Lien → LGD 100%', 'rose'], ['Default RW Surge', '65.2% → 109.8% RW', 'rose'], ['Dilution Charge', 'Unchanged at ' + fmtM(s1DilRWA) + ' RWA', 'amber']],
+            preset: { mode: 'FIRB_UNDEC', drawn: 110, undrawn: 40, sen: 'NONSENIOR', elDef: 0.60, sme: false, cov: true, mDrawn: 1.0, dilMat: 'MATERIAL', elDil: 0.40, dil1y: true, ppdType: 'NONE', crmScope: 'NONE' }
+          }
+        },
+        {
+          badge: 'Scenario 2 • Hybrid E-Commerce Receivables (CRE34.2 & Fn 156)',
+          title: '$90M Hybrid E-Commerce Receivables Pool',
+          sub: '$60M Consumer QRRE + $30M SME Corporate (€15M Avg)',
+          desc: 'Compares cleanly segregated retail/SME sub-pools against an unseparated hybrid data feed subject to the CRE34.2 highest-capital RW rule.',
+          base: {
+            label: 'Base Case: Segregated QRRE + SME Turnover Relief',
+            gross: 90, kdil: s2KDil, netEad: s2Net, defRwa: s2DefBase, dilRwa: s2DilRWA, totRwa: s2DefBase + s2DilRWA,
+            text: 'Automated sub-ledger tags separate $60M of consumer QRRE card receivables from $30M of SME merchant invoices (with verified €15M average turnover under Footnote 156). Blended Default RWA is ' + fmtM(s2DefBase) + '.',
+            tags: [['Sub-Pool Separation', 'Clean QRRE + SME Split', 'emerald'], ['Footnote 156 Relief', '€15M Avg Turnover Applied', 'cyan'], ['Universal Dilution', 'Corp RW on 0.35% Returns', 'amber']],
+            preset: { mode: 'RETAIL_QRRE', drawn: 90, undrawn: 0, pdDef: 1.80, lgdDef: 45, sme: true, smeTurn: 15, cov: true, mDrawn: 1.2, dilMat: 'MATERIAL', elDil: 0.35, dil1y: true, ppdType: 'NONE', crmScope: 'NONE' }
+          },
+          stress: {
+            label: 'Audit Finding: Unseparated Hybrid Highest-RW Penalty',
+            gross: 90, kdil: s2KDil, netEad: s2Net, defRwa: s2DefStress, dilRwa: s2DilRWA, totRwa: s2DefStress + s2DilRWA,
+            text: 'Servicer feed fails to separate retail obligors from corporate merchants and omits obligor turnover. CRE34.2 mandates the highest-capital risk-weight function (unadjusted Corporate RW) across all $90M.',
+            tags: [['CRE34.2 Hybrid Rule', 'Highest RW Forced on 100%', 'rose'], ['Footnote 156 Lost', 'Missing Sales → 0% Relief', 'rose'], ['Default RWA Jump', fmtM(s2DefBase) + ' → ' + fmtM(s2DefStress), 'rose']],
+            preset: { mode: 'HYBRID', drawn: 90, undrawn: 0, sen: 'SENIOR', pdDef: 1.50, lgdDef: 40, sme: false, smeTurn: 15, cov: true, mDrawn: 1.2, dilMat: 'MATERIAL', elDil: 0.35, dil1y: true, ppdType: 'NONE', crmScope: 'NONE' }
+          }
+        },
+        {
+          badge: 'Scenario 3 • A-IRB Auto-Parts Revolving Line (CRE34.6, 34.7 & 34.10)',
+          title: '$200M A-IRB Auto-Parts Revolving Purchase Facility',
+          sub: '$140M Drawn + $60M Undrawn (40% Mandatory CCF = $164M Gross)',
+          desc: 'Examines missing CRE34.7 early-amortisation triggers spiking undrawn maturity M, plus non-refundable vs refundable PPD re-characterisation under CRE34.10.',
+          base: {
+            label: 'Base Case: Protected Covenants + $8M Non-Refundable PPD',
+            gross: s3Gross, kdil: s3KDil, netEad: s3Net, defRwa: s3DefBase, dilRwa: s3DilRWA, totRwa: s3DefBase + s3DilRWA,
+            text: 'A-IRB infers PD = 1.50% from EL = 0.45% and LGD = 30%, while locking undrawn commitments at the mandatory 40% CCF. Early-amortisation triggers keep undrawn M at 1.0y. The $8M non-refundable PPD gives $0 RWA reduction.',
+            tags: [['A-IRB Undrawn CCF', 'Locked at 40% (CRE34.6)', 'cyan'], ['Early Amort. Trigger', 'Active → Undrawn M = 1.0y', 'emerald'], ['Non-Refundable PPD', '$8M PPD = $0 RWA Relief', 'amber']],
+            preset: { mode: 'AIRB', drawn: 140, undrawn: 60, elDef: 0.45, lgdDef: 30, sme: false, cov: true, mDrawn: 1.0, mInv: 0.5, mFac: 3.5, dilMat: 'MATERIAL', elDil: 0.30, dil1y: true, ppdType: 'NON_REF', ppdAmt: 8.0, crmScope: 'NONE' }
+          },
+          stress: {
+            label: 'Audit Finding: Missing Trigger (M=4.0y) + Refundable PPD',
+            gross: s3Gross, kdil: s3KDil, netEad: s3Net, defRwa: s3DefStress, dilRwa: s3DilRWA, totRwa: s3DefStress + s3DilRWA,
+            text: 'Legal review finds stop-purchase triggers are non-binding, forcing undrawn M = 0.5y max invoice + 3.5y facility = 4.0y (CRE34.7). In addition, seller performance rebates re-characterise the $8M PPD as refundable first-loss protection under CRE40–CRE45.',
+            tags: [['CRE34.7 Maturity Spike', 'Undrawn M: 1.0y → 4.0y', 'rose'], ['CRE34.10 Re-Class', 'Refundable PPD → CRE40–45', 'amber'], ['Seller Capital Impact', 'Seller Holds First-Loss Position', 'rose']],
+            preset: { mode: 'AIRB', drawn: 140, undrawn: 60, elDef: 0.45, lgdDef: 30, sme: false, cov: false, mDrawn: 1.0, mInv: 0.5, mFac: 3.5, dilMat: 'MATERIAL', elDil: 0.30, dil1y: true, ppdType: 'REF', ppdAmt: 8.0, crmScope: 'NONE' }
+          }
+        },
+        {
+          badge: 'Scenario 4 • Export Receivables Insurance (CRE34.12)',
+          title: '$120M Cross-Border Export Receivables with Credit Insurance',
+          sub: '$120M Drawn Pool | AA Insurer (20% RW)',
+          desc: 'Demonstrates full dual-risk guarantee substitution (CRE34.12(1)) versus partial 75% default-only coverage leaving unhedged dilution RWA exposed (CRE34.12(2)&(3)).',
+          base: {
+            label: 'Base Case: 100% Dual Default & Dilution Insurer Wrap',
+            gross: s4Gross, kdil: s4KDil, netEad: s4Net, defRwa: s4BaseDef, dilRwa: s4BaseDil, totRwa: 24.0,
+            text: 'An AA-rated insurer (20% RW) guarantees 100% of both default and dilution losses. Under CRE34.12(1), the bank substitutes 20% RW for the pool’s combined risk weight, cutting total RWA to $24.00M.',
+            tags: [['Coverage Scope', '100% Default + Dilution', 'emerald'], ['Substituted RW', '20% AA Insurer RW', 'cyan'], ['Combined RWA', '$120.00M × 20% = $24.00M', 'emerald']],
+            preset: { mode: 'FIRB_PD', drawn: 120, undrawn: 0, pdDef: 1.80, lgdDef: 40, sme: false, cov: true, mDrawn: 1.4, dilMat: 'MATERIAL', elDil: 0.65, dil1y: true, ppdType: 'NONE', crmScope: 'BOTH', crmPct: 100, crmRW: 20 }
+          },
+          stress: {
+            label: 'Stress Case: 75% Default-Only Policy + Unhedged Dilution',
+            gross: s4Gross, kdil: s4KDil, netEad: s4Net, defRwa: s4StressDef, dilRwa: s4StressDil, totRwa: s4StressDef + s4StressDil,
+            text: 'Policy endorsement carves out commercial dispute dilution and caps default cover at 75%. Under CRE34.12(2)&(3), 25% of Default RWA reverts to pool weights and 100% of Dilution RWA (' + fmtM(s4StressDil) + ') is added back.',
+            tags: [['Partial Default CRM', '75% Insured + 25% Uninsured', 'amber'], ['Unhedged Dilution', '100% Dilution RWA Added', 'rose'], ['Total RWA Surge', '$24.00M → ' + fmtM(s4StressDef + s4StressDil), 'rose']],
+            preset: { mode: 'FIRB_PD', drawn: 120, undrawn: 0, pdDef: 1.80, lgdDef: 40, sme: false, cov: true, mDrawn: 1.4, dilMat: 'MATERIAL', elDil: 0.65, dil1y: true, ppdType: 'NONE', crmScope: 'DEFAULT_ONLY', crmPct: 75, crmRW: 20 }
+          }
+        }
+      ];
+    }
+
+    const WALKTHROUGHS = buildScenarios();
+    let activeScenarioIdx = 0;
+    let activeScenarioMode = 'base';
+
+    function selectScenario(idx) {
+      activeScenarioIdx = idx;
+      activeScenarioMode = 'base';
+      document.querySelectorAll('.scen-btn').forEach(b => {
+        if (parseInt(b.dataset.scen, 10) === idx) {
+          b.className = 'scen-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white shadow-sm transition';
+        } else {
+          b.className = 'scen-btn px-3 py-1.5 rounded-xl text-xs font-bold quant-subcard t-secondary transition';
+        }
+      });
+      renderScenario();
+    }
+
+    function setScenarioMode(m) {
+      activeScenarioMode = m;
+      renderScenario();
+    }
+
+    function loadScenarioIntoCalculator() {
+      const p = WALKTHROUGHS[activeScenarioIdx][activeScenarioMode].preset;
+      document.getElementById('calc-mode').value = p.mode;
+      document.getElementById('calc-drawn').value = (p.drawn || 0).toFixed(2);
+      document.getElementById('calc-undrawn').value = (p.undrawn || 0).toFixed(2);
+      if (p.sen) document.getElementById('calc-seniority').value = p.sen;
+      if (p.elDef !== undefined) document.getElementById('calc-el-def').value = p.elDef.toFixed(2);
+      if (p.pdDef !== undefined) document.getElementById('calc-pd-def').value = p.pdDef.toFixed(2);
+      if (p.lgdDef !== undefined) document.getElementById('calc-lgd-def').value = p.lgdDef.toFixed(2);
+      document.getElementById('calc-sme-avail').checked = Boolean(p.sme);
+      if (p.smeTurn !== undefined) document.getElementById('calc-sme-turn').value = p.smeTurn.toFixed(2);
+      document.getElementById('calc-cov-active').checked = p.cov !== undefined ? p.cov : true;
+      if (p.mDrawn !== undefined) document.getElementById('calc-m-drawn').value = p.mDrawn.toFixed(2);
+      if (p.mInv !== undefined) document.getElementById('calc-m-inv').value = p.mInv.toFixed(2);
+      if (p.mFac !== undefined) document.getElementById('calc-m-fac').value = p.mFac.toFixed(2);
+      document.getElementById('calc-dil-materiality').value = p.dilMat || 'MATERIAL';
+      if (p.elDil !== undefined) document.getElementById('calc-el-dil').value = p.elDil.toFixed(2);
+      document.getElementById('calc-dil-1y').checked = p.dil1y !== undefined ? p.dil1y : true;
+      document.getElementById('calc-ppd-type').value = p.ppdType || 'NONE';
+      if (p.ppdAmt !== undefined) document.getElementById('calc-ppd-amt').value = p.ppdAmt.toFixed(2);
+      document.getElementById('calc-crm-scope').value = p.crmScope || 'NONE';
+      if (p.crmPct !== undefined) document.getElementById('calc-crm-slider').value = p.crmPct;
+      if (p.crmRW !== undefined) document.getElementById('calc-crm-rw').value = p.crmRW.toFixed(2);
+
+      handleCalcModeChange();
+      switchMainTab('calculator');
+    }
+
+    function renderScenario() {
+      const s = WALKTHROUGHS[activeScenarioIdx];
+      const curr = s[activeScenarioMode];
+      const badgeMap = { emerald: 'badge-emerald', cyan: 'badge-cyan', amber: 'badge-amber', rose: 'badge-rose' };
+
+      const tagsHtml = curr.tags.map(t => `
+        <div class="p-3 rounded-xl quant-subcard flex items-center justify-between gap-2">
+          <span class="text-xs font-semibold t-secondary">${t[0]}</span>
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold ${badgeMap[t[2]]}">${t[1]}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('scenario-left').innerHTML = `
+        <div class="quant-card rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full badge-cyan">${s.badge}</span>
+            <span class="text-xs font-mono t-muted">${s.sub}</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-extrabold t-primary">${s.title}</h3>
+            <p class="text-xs t-secondary mt-1 leading-relaxed">${s.desc}</p>
+          </div>
+
+          <div class="p-1 rounded-xl quant-subcard grid grid-cols-1 sm:grid-cols-2 gap-1">
+            <button type="button" onclick="setScenarioMode('base')" class="py-2 px-3 rounded-lg text-xs font-bold text-left transition ${activeScenarioMode === 'base' ? 'bg-sky-500 text-white shadow' : 't-muted hover:t-primary'}">
+              ${s.base.label}
+            </button>
+            <button type="button" onclick="setScenarioMode('stress')" class="py-2 px-3 rounded-lg text-xs font-bold text-left transition ${activeScenarioMode === 'stress' ? 'bg-rose-600 text-white shadow' : 't-muted hover:t-primary'}">
+              ${s.stress.label}
+            </button>
+          </div>
+
+          <div class="terminal-panel rounded-xl p-4 text-xs t-secondary leading-relaxed">
+            <span class="text-[11px] font-bold uppercase tracking-wider t-cyan block mb-1">Walkthrough Commentary</span>
+            ${curr.text}
+          </div>
+
+          <div class="space-y-2">${tagsHtml}</div>
+        </div>
+      `;
+
+      const dRwa = s.stress.totRwa - s.base.totRwa;
+      document.getElementById('scenario-right-kpis').innerHTML = `
+        <div class="quant-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b t-border pb-3">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider t-muted block">Selected Case Output</span>
+              <h4 class="text-sm font-extrabold t-primary">${curr.label}</h4>
+            </div>
+            <span class="mono-num text-xs font-bold px-2.5 py-1 rounded badge-cyan">Gross ${fmtM(curr.gross)}</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-xl quant-subcard">
+              <span class="t-muted block">K_Dilution</span>
+              <span class="text-base font-extrabold t-amber mono-num">${fmtM(curr.kdil)}</span>
+            </div>
+            <div class="p-3 rounded-xl quant-subcard">
+              <span class="t-muted block">Net Default EAD</span>
+              <span class="text-base font-extrabold t-cyan mono-num">${fmtM(curr.netEad)}</span>
+            </div>
+            <div class="p-3 rounded-xl quant-subcard">
+              <span class="t-muted block">Default RWA</span>
+              <span class="text-base font-extrabold t-indigo mono-num">${fmtM(curr.defRwa)}</span>
+            </div>
+            <div class="p-3 rounded-xl quant-subcard">
+              <span class="t-muted block">Dilution RWA</span>
+              <span class="text-base font-extrabold t-amber mono-num">${fmtM(curr.dilRwa)}</span>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl quant-subcard space-y-1.5 text-xs">
+            <div class="flex justify-between">
+              <span class="t-secondary font-semibold">Combined RWA (8% Capital):</span>
+              <span class="mono-num font-extrabold t-emerald">${fmtM(curr.totRwa)} (${fmtM(curr.totRwa * 0.08)})</span>
+            </div>
+            <div class="flex justify-between pt-1 border-t t-border">
+              <span class="t-muted">Stress / Audit RWA Spike:</span>
+              <span class="mono-num font-bold t-rose">+${fmtM(dRwa)} (+${fmtM(dRwa * 0.08)} Cap)</span>
+            </div>
+          </div>
+          <button type="button" onclick="loadScenarioIntoCalculator()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-bold transition shadow-md">
+            Load Scenario into Calculator →
+          </button>
+        </div>
+      `;
+
+      drawScenarioCanvas(s.base, s.stress);
+    }
+
+    function drawScenarioCanvas(bObj, sObj) {
+      const canvas = document.getElementById('scenarioCanvas');
+      if (!canvas) return;
+      const { ctx, w, h } = prepareCanvas(canvas);
+      const pal = getThemeCanvasPalette();
+
+      const groups = ['Default RWA', 'Dilution RWA', 'Combined RWA'];
+      const bVals = [bObj.defRwa, bObj.dilRwa, bObj.totRwa];
+      const sVals = [sObj.defRwa, sObj.dilRwa, sObj.totRwa];
+
+      const pad = { left: 50, right: 16, top: 24, bottom: 38 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+      const maxVal = Math.max(20, ...bVals, ...sVals) * 1.18;
+
+      ctx.strokeStyle = pal.grid;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.fillStyle = pal.text;
+
+      for (let i = 0; i <= 4; i++) {
+        const v = (maxVal / 4) * i;
+        const y = pad.top + ph - (v / maxVal) * ph;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+        ctx.textAlign = 'right';
+        ctx.fillText('$' + v.toFixed(0) + 'M', pad.left - 6, y + 3);
+      }
+
+      const gw = pw / groups.length;
+      const bw = Math.min(34, gw * 0.28);
+      const baseCol = pal.isLight ? '#0284c7' : '#38bdf8';
+      const strCol = pal.isLight ? '#e11d48' : '#fb7185';
+
+      groups.forEach((g, idx) => {
+        const cx = pad.left + gw * idx + gw / 2;
+        const h1 = (bVals[idx] / maxVal) * ph;
+        const h2 = (sVals[idx] / maxVal) * ph;
+
+        ctx.fillStyle = baseCol;
+        ctx.beginPath();
+        ctx.roundRect(cx - bw - 3, pad.top + ph - h1, bw, Math.max(2, h1), [5, 5, 0, 0]);
+        ctx.fill();
+
+        ctx.fillStyle = strCol;
+        ctx.beginPath();
+        ctx.roundRect(cx + 3, pad.top + ph - h2, bw, Math.max(2, h2), [5, 5, 0, 0]);
+        ctx.fill();
+
+        ctx.font = 'bold 9.5px JetBrains Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = pal.title;
+        ctx.fillText('$' + bVals[idx].toFixed(0), cx - bw / 2 - 3, pad.top + ph - h1 - 5);
+        ctx.fillText('$' + sVals[idx].toFixed(0), cx + bw / 2 + 3, pad.top + ph - h2 - 5);
+
+        ctx.fillStyle = pal.text;
+        ctx.font = '600 10.5px Inter, sans-serif';
+        ctx.fillText(g, cx, pad.top + ph + 16);
+      });
+
+      ctx.font = '600 10px Inter, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = baseCol;
+      ctx.fillRect(pad.left, pad.top + ph + 24, 9, 9);
+      ctx.fillStyle = pal.text;
+      ctx.fillText('Base Case', pad.left + 13, pad.top + ph + 32);
+
+      ctx.fillStyle = strCol;
+      ctx.fillRect(pad.left + 88, pad.top + ph + 24, 9, 9);
+      ctx.fillStyle = pal.text;
+      ctx.fillText('Stress / Audit Finding', pad.left + 101, pad.top + ph + 32);
+    }
+
+    // -----------------------------------------------------------------------
+    // 9. MODULE 5: DATA QUALITY & GOVERNANCE COMPLIANCE SIMULATOR
+    // -----------------------------------------------------------------------
+    function resetSimulatorClean() {
+      ['gp-1', 'gp-2', 'gp-3', 'gp-4', 'gp-5', 'gp-6'].forEach(id => {
+        document.getElementById(id).value = '95';
+      });
+      ['def-senior', 'def-dil1y', 'def-hybrid', 'def-sme', 'def-recourse', 'def-ccf', 'def-triggers', 'def-ppd'].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      runComplianceSimulator();
+    }
+
+    function runComplianceSimulator() {
+      const drawn = parseSafeNum(document.getElementById('sim-drawn').value).value;
+      const undrawn = parseSafeNum(document.getElementById('sim-undrawn').value).value;
+      const baseEL = parseSafeNum(document.getElementById('sim-el').value, 50).value / 100.0;
+
+      // Read 6 Governance Pillar Sliders
+      const gpIds = ['gp-1', 'gp-2', 'gp-3', 'gp-4', 'gp-5', 'gp-6'];
+      const gpVals = gpIds.map(id => {
+        const v = parseInt(document.getElementById(id).value, 10) || 0;
+        const lbl = document.getElementById('lbl-' + id);
+        lbl.textContent = v + '%';
+        lbl.className = 'mono-num font-bold ' + (v < 60 ? 't-rose' : (v < 80 ? 't-amber' : 't-cyan'));
+        return v;
+      });
+      const avgPillar = gpVals.reduce((a, b) => a + b, 0) / gpVals.length;
+
+      // Baseline Compliant Vasicek RWA (Senior 40% LGD, €18M SME, M=1.0y, 40% CCF, Dil EL=0.35% at M=1.0y)
+      const grossClean = drawn + 0.40 * undrawn;
+      const dilClean = irbCorporateK(0.0035, 1.00, 1.0, null, true);
+      const kDilClean = grossClean * dilClean.k;
+      const netClean = Math.max(0, grossClean - kDilClean);
+      const defCleanRW = irbCorporateK(baseEL / 0.40, 0.40, 1.0, 18.0, false).rw;
+      const cleanRWA = netClean * defCleanRW + grossClean * dilClean.rw;
+
+      // Supervisory Override Parameters driven by 8 Flags + Weak Sliders
+      const fSenior = document.getElementById('def-senior').checked || gpVals[3] < 50;
+      const fDil1y = document.getElementById('def-dil1y').checked || gpVals[5] < 50;
+      const fHybrid = document.getElementById('def-hybrid').checked || gpVals[0] < 50;
+      const fSme = document.getElementById('def-sme').checked;
+      const fRecourse = document.getElementById('def-recourse').checked || gpVals[1] < 50;
+      const fCcf = document.getElementById('def-ccf').checked;
+      const fTriggers = document.getElementById('def-triggers').checked || gpVals[4] < 50;
+      const fPpd = document.getElementById('def-ppd').checked;
+
+      let flagPenalty = 0;
+      const actions = [];
+
+      const audEL = fRecourse ? (baseEL + 0.0035) : baseEL;
+      const audLGD = fSenior ? 1.00 : 0.40;
+      const audPD = audLGD === 1.00 ? audEL : (audEL / 0.40);
+      const audSme = (fSme || fHybrid) ? null : 18.0;
+      const audMDrawn = fHybrid ? 2.0 : 1.0;
+      const audMUndrawn = fTriggers ? 3.5 : audMDrawn;
+      const audMDil = fDil1y ? 2.5 : 1.0;
+
+      const dilAud = irbCorporateK(0.0035, 1.00, audMDil, null, true);
+      const kDilAud = grossClean * dilAud.k;
+      const netAud = Math.max(0, grossClean - kDilAud);
+      const dShare = grossClean > 0 ? (drawn / grossClean) : 1.0;
+      const uShare = grossClean > 0 ? ((0.40 * undrawn) / grossClean) : 0.0;
+
+      const rwAudD = irbCorporateK(audPD, audLGD, audMDrawn, audSme, false).rw;
+      const rwAudU = irbCorporateK(audPD, audLGD, audMUndrawn, audSme, false).rw;
+      let overrideRWA = (netAud * dShare * rwAudD) + (netAud * uShare * rwAudU) + (grossClean * dilAud.rw);
+
+      if (fSenior) {
+        flagPenalty += 16;
+        actions.push({ sev: 'err', msg: 'Perfect Exclusive Seniority (CRE34.5(1)): Execute true-sale lien releases to remove subordinated claims and lower LGD from 100% back to 40%.' });
+      }
+      if (fDil1y) {
+        flagPenalty += 10;
+        actions.push({ sev: 'warn', msg: 'Enforce <1 Year Dilution Resolution (CRE34.8): Automate credit-memo aging tracking under 12 months to restore the M = 1.0y dilution maturity waiver.' });
+      }
+      if (fHybrid) {
+        flagPenalty += 12;
+        overrideRWA += grossClean * 0.08;
+        actions.push({ sev: 'err', msg: 'Separate Hybrid Exposure Classes (CRE34.2): Tag retail and corporate invoices at ingestion to eliminate the highest-RW pool contamination penalty.' });
+      }
+      if (fSme) {
+        flagPenalty += 8;
+        actions.push({ sev: 'warn', msg: 'Collect Obligor Annual Sales (Footnote 156): Capture exposure-weighted obligor turnover to restore €18M SME correlation relief.' });
+      }
+      if (fRecourse) {
+        flagPenalty += 12;
+        actions.push({ sev: 'err', msg: 'Remove Seller Recourse from Pool EL (CRE34.3/34.4): Re-calibrate historical loss series on a pure stand-alone obligor basis.' });
+      }
+      if (fCcf) {
+        flagPenalty += 9;
+        overrideRWA += (0.25 * undrawn) * rwAudU;
+        actions.push({ sev: 'err', msg: 'Lock Undrawn CCF at 40% (CRE34.6): Retire the 15% internal A-IRB CCF estimate and apply the mandatory 40% revolving commitment factor.' });
+      }
+      if (fTriggers) {
+        flagPenalty += 10;
+        actions.push({ sev: 'warn', msg: 'Add Early-Amortisation Covenants (CRE34.7): Insert binding dilution/default stop-purchase triggers to drop undrawn maturity from 3.5y to 1.0y.' });
+      }
+      if (fPpd) {
+        flagPenalty += 9;
+        overrideRWA += 8.0 * rwAudD;
+        actions.push({ sev: 'err', msg: 'Reverse Non-Refundable PPD Credit (CRE34.10): Restore $8.00M improperly deducted exposure, or convert into a refundable holdback under CRE40–CRE45.' });
+      }
+      if (gpVals[2] < 60) {
+        overrideRWA *= 1.05;
+        actions.push({ sev: 'warn', msg: 'Establish Dedicated Lockbox Control: Route obligor payments directly into a bank-controlled collection account.' });
+      }
+
+      const score = Math.max(0, Math.min(100, Math.round(avgPillar * 0.55 + Math.max(0, 45 - flagPenalty * 0.65))));
+      const addOnRWA = Math.max(0, overrideRWA - cleanRWA);
+
+      if (actions.length === 0) {
+        actions.push({ sev: 'ok', msg: 'Full CRE34 Governance Compliance: Stand-alone data, perfected senior liens, 40% CCF, active triggers, and <1y dilution tracking pass validation with $0.00M add-on.' });
+      }
+
+      document.getElementById('sim-score-txt').textContent = score + '%';
+      const circ = 163.36;
+      const ring = document.getElementById('sim-ring');
+      ring.style.strokeDashoffset = (circ - (score / 100) * circ).toFixed(2);
+
+      const badge = document.getElementById('sim-verdict-badge');
+      const desc = document.getElementById('sim-score-desc');
+      if (addOnRWA < 0.05 && score >= 80) {
+        ring.setAttribute('stroke', '#10b981');
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold badge-emerald';
+        badge.textContent = 'Supervisor Approved';
+        desc.textContent = 'All 6 governance pillars and CRE34 parameter checks satisfy IRB requirements.';
+      } else if (score >= 60) {
+        ring.setAttribute('stroke', '#f59e0b');
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold badge-amber';
+        badge.textContent = 'Targeted Overrides';
+        desc.textContent = 'Specific data or covenant flags trigger targeted CRE34 parameter overrides.';
+      } else {
+        ring.setAttribute('stroke', '#f43f5e');
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold badge-rose';
+        badge.textContent = 'Severe Overrides';
+        desc.textContent = 'Multiple CRE34 governance and audit defects force steep RWA add-ons.';
+      }
+
+      document.getElementById('sim-out-base').textContent = fmtM(cleanRWA);
+      document.getElementById('sim-out-base-cap').textContent = '8% Cap: ' + fmtM(cleanRWA * 0.08);
+      document.getElementById('sim-out-audit').textContent = fmtM(overrideRWA);
+      document.getElementById('sim-out-audit-cap').textContent = '8% Cap: ' + fmtM(overrideRWA * 0.08);
+      document.getElementById('sim-addon-rwa').textContent = '+' + fmtM(addOnRWA);
+      document.getElementById('sim-addon-cap').textContent = '+' + fmtM(addOnRWA * 0.08);
+
+      const sevMap = { err: 'badge-rose', warn: 'badge-amber', ok: 'badge-emerald' };
+      document.getElementById('sim-remediation-list').innerHTML = actions.map(a => `
+        <li class="p-3 rounded-xl leading-relaxed ${sevMap[a.sev]}">${a.msg}</li>
+      `).join('');
+
+      drawSimulatorCanvas(cleanRWA, overrideRWA);
+    }
+
+    function drawSimulatorCanvas(cleanRWA, overrideRWA) {
+      const canvas = document.getElementById('simulatorCanvas');
+      if (!canvas) return;
+      const { ctx, w, h } = prepareCanvas(canvas);
+      const pal = getThemeCanvasPalette();
+
+      const groups = ['Combined RWA ($M)', 'Min 8% Capital ($M)'];
+      const bVals = [cleanRWA, cleanRWA * 0.08];
+      const aVals = [overrideRWA, overrideRWA * 0.08];
+
+      const pad = { left: 50, right: 16, top: 24, bottom: 28 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+      const maxVal = Math.max(15, ...bVals, ...aVals) * 1.2;
+
+      ctx.strokeStyle = pal.grid;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.fillStyle = pal.text;
+
+      for (let i = 0; i <= 3; i++) {
+        const v = (maxVal / 3) * i;
+        const y = pad.top + ph - (v / maxVal) * ph;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + pw, y);
+        ctx.stroke();
+        ctx.textAlign = 'right';
+        ctx.fillText('$' + v.toFixed(0) + 'M', pad.left - 6, y + 3);
+      }
+
+      const gw = pw / 2;
+      const bw = Math.min(44, gw * 0.28);
+      const cCol = pal.isLight ? '#059669' : '#34d399';
+      const oCol = pal.isLight ? '#e11d48' : '#fb7185';
+
+      groups.forEach((g, idx) => {
+        const cx = pad.left + gw * idx + gw / 2;
+        const h1 = (bVals[idx] / maxVal) * ph;
+        const h2 = (aVals[idx] / maxVal) * ph;
+
+        ctx.fillStyle = cCol;
+        ctx.beginPath();
+        ctx.roundRect(cx - bw - 4, pad.top + ph - h1, bw, Math.max(2, h1), [5, 5, 0, 0]);
+        ctx.fill();
+
+        ctx.fillStyle = oCol;
+        ctx.beginPath();
+        ctx.roundRect(cx + 4, pad.top + ph - h2, bw, Math.max(2, h2), [5, 5, 0, 0]);
+        ctx.fill();
+
+        ctx.font = 'bold 10px JetBrains Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = pal.title;
+        ctx.fillText('$' + bVals[idx].toFixed(1) + 'M', cx - bw / 2 - 4, pad.top + ph - h1 - 5);
+        ctx.fillText('$' + aVals[idx].toFixed(1) + 'M', cx + bw / 2 + 4, pad.top + ph - h2 - 5);
+
+        ctx.fillStyle = pal.text;
+        ctx.font = '600 10.5px Inter, sans-serif';
+        ctx.fillText(g, cx, pad.top + ph + 17);
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 10. INITIALISATION & LISTENERS
+    // -----------------------------------------------------------------------
+    window.addEventListener('load', () => {
+      let savedTheme = 'dark';
+      try {
+        const st = localStorage.getItem('cre34_theme');
+        if (st === 'light' || st === 'dark') savedTheme = st;
+      } catch (e) {}
+
+      const dock = document.getElementById('primary-nav-dock');
+      if (dock) {
+        dock.addEventListener('scroll', updateNavScrollCues, { passive: true });
+        if (typeof ResizeObserver !== 'undefined') {
+          new ResizeObserver(updateNavScrollCues).observe(dock);
+        }
+        updateNavScrollCues();
+      }
+
+      window.addEventListener('resize', () => {
+        updateNavScrollCues();
+        redrawActiveCanvases();
+      });
+
+      selectOverviewCard(0);
+      setupOverviewCanvasHover();
+      handleCalcModeChange();
+      renderRulesMatrix();
+      applyTheme(savedTheme);
+    });
+  </script>
+</body>
+</html>
